@@ -49,8 +49,8 @@ ISRM_full_cell_geometries <- local({
 
   # First, read from `Data/isrm_boundaries_latlons.csv`.
   full_csv_latlon_data <-
-    here::here("Data", "isrm_boundaries_latlons.csv") %>%
     read_csv(
+      ISRM_FULL_LATLON_CSV_PATH,
       col_types = cols(
         isrm = col_integer(),
         .default = col_double())) %>%

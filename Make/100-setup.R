@@ -21,7 +21,11 @@ ISRM_CA_CELL_COUNT <- 9001
 ISRM_FULL_NC_URL <- "https://zenodo.org/record/2589760/files/isrm_v1.2.1.zip?download=1"
 ISRM_FULL_NC_PATH <- here::here("Data", "isrm_v1.2.1.ncf")
 
+# Cell geometry definitions for the full ISRM (minimum cell size ≈ 1 km^2)
+ISRM_FULL_LATLON_CSV_PATH <- here::here("Data", "isrm_boundaries_latlons.csv")
+
 # The California "hi-res" prototype,
 # via https://drive.google.com/drive/folders/1WmLRz7iWo2MjtSikgHEig7M0NvK2sOns
 ISRM_CA_NC_URL <- "https://drive.google.com/u/0/uc?id=1v__TPKJeiL8Q4zLz8Dyx5HcWSqR2NDx4&export=download&confirm=t"
 ISRM_CA_NC_PATH <- here::here("Data", "ca_isrm.ncf")
+
