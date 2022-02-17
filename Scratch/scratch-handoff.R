@@ -147,6 +147,39 @@ lltools::leaflet_map_SFBA() %>%
 
 #'----------------------------------------------------------------------
 #'
+#' Map baseline PM2.5.
+#' This seems to vary on a 12x12 km^2 scale.
+#'
+#'----------------------------------------------------------------------
+
+ggplot() +
+  aes(
+    fill = `Baseline TotalPM25`) +
+  ggtools::scale_fill_sepia(
+    latex2exp::TeX(str_ugm3("TeX")),
+    oob = squish,
+    breaks = seq(0, 15, by = 3),
+    limits = c(0, 15)) +
+  geom_sf(
+    color = alpha("white", 0.5), size = 0.1,
+    data = ISRM_SFAB_cell_geodata) +
+  geom_sf(
+    color = "white", fill = NA,
+    data = CMAQ_envelope) +
+  geom_sf(
+    color = alpha("white", 0.8), fill = NA, size = 0.3,
+    data = st_intersection(
+      SFBA::SFBA_OSM_coast,
+      SFAB_WGS84_boundary)) +
+  labs(
+    title = "Baseline TotalPM25",
+    subtitle = str_glue(
+      "Basis: {basename(ISRM_FULL_NC_PATH)} ",
+      "and {basename(ISRM_FULL_LATLON_CSV_PATH)}"),
+    caption = str_glue("DRAFT {str_date()}"))
+
+#'----------------------------------------------------------------------
+#'
 #' Export copies of the following to `Build/Geodata/`:
 #'
 #' - `ISRM_SFAB_cell_geodata` (as GeoJSON)
