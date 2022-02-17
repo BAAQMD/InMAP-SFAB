@@ -1,25 +1,5 @@
 #'----------------------------------------------------------------------
 #'
-#' Connect to the supplied NetCDF file.
-#'
-#' We use the following packages as interfaces:
-#'
-#' - [ncmeta], for access to metadata
-#' - [ncdf4], for fact access via our in-house `extract_ISRM_array()`; and
-#' - [tidync], for attempting to extract and join with `D3` data.
-#'
-#'----------------------------------------------------------------------
-
-ISRM_CA_tidync_obj <-
-  ISRM_CA_nc_path %>%
-  tidync::tidync()
-
-ISRM_CA_ncdf4_obj <-
-  ISRM_CA_nc_path %>%
-  ncdf4::nc_open()
-
-#'----------------------------------------------------------------------
-#'
 #' The envelope of `CMAQ_raster_template` is a basis for our domain.
 #'
 #'----------------------------------------------------------------------
@@ -40,8 +20,6 @@ CMAQ_raster_template <- local({
 CMAQ_envelope <-
   CMAQ_raster_template %>%
   st_envelope() %>%
-  st_transform(
-    ISRM_CRS) %>%
   st_segmentize( # add points on edges (100m spacing)
     dfMaxLength = 100)
 
@@ -107,13 +85,16 @@ ISRM_full_cell_geometries <- local({
       geometry = st_sfc(poly, crs = ISRM_CRS)) %>%
     st_as_sf() %>%
     mutate(
-      cell_km2 = drop_units(set_units(st_area(.), "km^2")))
+      cell_km2 = drop_units(set_units(st_area(.), "km^2"))) %>%
+    tbltools::select_last(
+      geometry)
 
 })
 
 #'----------------------------------------------------------------------
 #'
-#' Filter `ISRM_full_cell_geometries` using the envelope of `CMAQ_raster_template`,
+#' Filter `ISRM_full_cell_geometries`,
+#' using the envelope of `CMAQ_raster_template`,
 #' yielding `ISRM_SFAB_cell_geodata` (n = 2,553 cells).
 #'
 #'----------------------------------------------------------------------
@@ -121,41 +102,57 @@ ISRM_full_cell_geometries <- local({
 ISRM_SFAB_cell_geometries <-
   ISRM_full_cell_geometries %>%
   st_filter(
-    CMAQ_envelope) %>%
-  mutate(
-    cell_km2 = drop_units(set_units(st_area(.), "km^2"))) %>%
-  # inner_join(
-  #   ISRM_CA_cell_lookup, # note: 5 cells at southwest corner are NA
-  #   by = "isrm") %>%
-  select_last(
-    geometry)
+    st_transform(
+      CMAQ_envelope, st_crs(.)))
 
 #'----------------------------------------------------------------------
 #'
-#' Extract selected cells and variables, using the `ncdf4` package.
+#' Extract deltas for the "SFAB" domain into an in-memory array
+#' `ISRM_SFAB_array`. See `R/extract_ISRM_array.R` for more details.
+#'
+#' Per variable, this step consumes ~50 MB and takes ~2 seconds.
 #'
 #'----------------------------------------------------------------------
 
 ISRM_SFAB_cell_ids <-
   ISRM_SFAB_cell_geometries %>%
-  pull(isrm) # FIXME: verify this is correct
+  pull(isrm)
 
-# Consumes about 2 seconds and 50 MB per variable
-ISRM_SFAB_array <-
-  c("PrimaryPM25", "SOA", "pNH4", "pNO3", "pSO4") %>%
-  map(
-    ~ extract_ISRM_array(
-      ISRM_full_ncdf4_obj,
-      ISRM_SFAB_cell_ids,
-      varid = .,
-      layer = 1)) %>%
+ISRM_SFAB_array <- local({
+
+  ISRM_full_ncdf4_obj <-
+    ncdf4::nc_open(
+      ISRM_FULL_NC_PATH)
+
+  varids <- c(
+    "PrimaryPM25",
+    "SOA",
+    "pNH4",
+    "pNO3",
+    "pSO4")
+
+  array_list <-
+    map(varids,
+        ~ extract_ISRM_array(
+          ISRM_full_ncdf4_obj,
+          ISRM_SFAB_cell_ids,
+          varid = .,
+          layer = 1))
+
+  ncdf4::nc_close(
+    ISRM_full_ncdf4_obj)
+
   bind_arrays(
+    array_list,
     along = "varid")
+
+})
 
 #'----------------------------------------------------------------------
 #'
 #' A `tbl_cube` might be friendlier than an array, and it has about the
 #' same memory footprint. But, it can't "just do" array multiplication.
+#' Let's build it anyway (this is cheap, for the time being at least).
 #'
 #'----------------------------------------------------------------------
 
@@ -166,14 +163,22 @@ ISRM_SFAB_cube <-
 
 #'----------------------------------------------------------------------
 #'
-#' Extract baseline data and join it to cell geometries, yielding
-#' `ISRM_SFAB_cell_geodata`.
+#' Extract baseline data and join it to cell geometries, yielding:
+#'
+#' - `ISRM_full_cell_geodata`; and
+#' - `ISRM_CA_cell_geodata`
+#'     - A subset of `ISRM_full_cell_geodata`
+#'         - Where `isrm` is in `ISRM_SFAB_cell_ids`
 #'
 #'----------------------------------------------------------------------
 
 ISRM_full_cell_geodata <- local({
 
-  ISRM_full_data <-
+  ISRM_full_tidync_obj <-
+    tidync::tidync(
+      ISRM_FULL_NC_PATH)
+
+  ISRM_full_baseline_data <-
     ISRM_full_tidync_obj %>%
     tidync::activate("D3") %>%
     hyper_tibble() %>%
@@ -185,19 +190,17 @@ ISRM_full_cell_geodata <- local({
     mutate(
       isrm = allcells - 1L) # **NOTE**: `isrm` starts at 0; `allcells` starts at 1
 
-  ISRM_full_cell_geometries %>%
-    powerjoin::power_left_join(
-      ISRM_full_data,
-      check = powerjoin::check_specs(
-        column_conflict = "abort",
-        unmatched_keys_left = "abort",
-        unmatched_keys_right = "abort",
-        na_keys = "abort"),
-      by = "isrm") %>%
-    rename_with(
-      str_remove, everything(), "^Baseline") %>%
-    select_last(
-      geometry)
+  rm(ISRM_full_tidync_obj)
+
+  powerjoin::power_left_join(
+    ISRM_full_cell_geometries,
+    ISRM_full_baseline_data,
+    check = powerjoin::check_specs(
+      column_conflict = "abort",
+      unmatched_keys_left = "abort",
+      unmatched_keys_right = "abort",
+      na_keys = "abort"),
+    by = "isrm")
 
 })
 
@@ -205,42 +208,3 @@ ISRM_SFAB_cell_geodata <-
   ISRM_full_cell_geodata %>%
   filter(
     isrm %in% ISRM_SFAB_cell_ids)
-
-#'----------------------------------------------------------------------
-#'
-#' Quick map, shapefile, and GeoJSON for debugging with UW team.
-#' Looks like cell IDs may not be lining up correctly.
-#'
-#' Ref: email 2022-02-14 "[InMAP] handoff test: population density".
-#'
-#'----------------------------------------------------------------------
-
-#
-# Not true --- why? Is `other` (incl. multi) omitted?
-#
-# with(
-#   ISRM_SFAB_cell_geodata,
-#   testthat::expect_equal(
-#     sum(TotalPop),
-#     sum(Asian + Black + Latino + Native + WhiteNoLat)))
-#
-
-ISRM_SFAB_cell_geodata %>%
-  mutate(
-    TotalPop_km2 = TotalPop / cell_km2) %>%
-  select(
-    isrm, TotalPop, cell_km2, TotalPop_km2) %>%
-  mapview::mapview(
-    zcol = "TotalPop_km2")
-
-ISRM_SFAB_cell_geodata %>%
-  write_shp(
-    here::here("Build", "Geodata", str_glue("ISRM_SFAB_cell_geodata-{str_datestamp()}")),
-    str_glue("ISRM_SFAB_cell_geodata-{str_datestamp()}"))
-
-ISRM_SFAB_cell_geodata %>%
-  as("Spatial") %>%
-  write_geojson(
-    here::here("Build", "Geodata"),
-    str_glue("ISRM_SFAB_cell_geodata-{str_datestamp()}"))
-

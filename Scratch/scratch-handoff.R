@@ -8,13 +8,13 @@
 #'----------------------------------------------------------------------
 
 #
-# Not true --- why? Is `other` (incl. multi) omitted?
+# Not true --- why? Is "Other/Multi" omitted?
 #
-# with(
-#   ISRM_SFAB_cell_geodata,
-#   testthat::expect_equal(
-#     sum(all),
-#     sum(asian + black + latino + native + white)))
+with(
+  ISRM_SFAB_cell_geodata,
+  testthat::expect_equal(
+    sum(TotalPop),
+    sum(Asian + Black + Latino + Native + WhiteNoLat)))
 
 #'----------------------------------------------------------------------
 #'
@@ -30,16 +30,16 @@ leaflet_map_SFBA() %>%
     color = "black",
     weight = 0.5, fillColor = "white", fillOpacity = 0.1) %>%
   addPolygons(
-    data = CMAQ_envelope,
+    data = st_transform(CMAQ_envelope, 4326), # WGS84 GPS
     stroke = "blue", weight = 1, fillOpacity = 0)
 
 #'----------------------------------------------------------------------
 #'
-#' Show metadata for the supplied `ca_isrm.ncf` file.
+#' Show metadata for `isrm_v1.2.1.ncf`.
 #'
 #'----------------------------------------------------------------------
 
-ISRM_full_nc_path %>%
+ISRM_FULL_NC_PATH %>%
   ncmeta::nc_atts() %>%
   mutate(value = unlist(value)) %>%
   select(variable, name, value) %>%
@@ -63,6 +63,10 @@ local({
   #
   #   (Python) 1201,1202 <=> (R/NetCDF) 1202,1203
   #
+
+  ISRM_full_ncdf4_obj <-
+    ncdf4::nc_open(
+      ISRM_FULL_NC_PATH)
 
   i <- 1201; j <- 1202; k <- 0; v <- "pNH4"
   s <- paste0("S", i+1); r <- paste0("R", j+1); l <- paste0("L", k+1)
@@ -104,6 +108,9 @@ local({
     expected,
     tol = tol)
 
+  ncdf4::nc_close(
+    ISRM_full_ncdf4_obj)
+
 })
 
 
@@ -115,21 +122,51 @@ local({
 #'
 #'----------------------------------------------------------------------
 
-ISRM_SFAB_cell_geodata %>%
-  mutate(
-    all_km2 = all / cell_km2) %>%
-  select(
-    isrm, all, cell_km2, all_km2) %>%
-  mapview::mapview(
-    zcol = "all_km2")
+color_for_pop_km2 <- function (x, palette = "viridis") {
+  pal <- colorNumeric(palette = palette, domain = c(0, 30e3))
+  return(pal(x))
+}
 
-ISRM_SFAB_cell_geodata %>%
-  write_shp(
-    here::here("Build", "Geodata", str_glue("ISRM_SFAB_cell_geodata-{str_datestamp()}")),
-    str_glue("ISRM_SFAB_cell_geodata-{str_datestamp()}"))
+lltools::leaflet_map_SFBA() %>%
+  addGlPolygonOverlay(
+    ISRM_SFAB_cell_geodata,
+    stroke = "black",
+    smoothFactor = 0,
+    weight = 0.1,
+    fillOpacity = 0.7,
+    fillColor = color_for_pop_km2(
+      with(ISRM_SFAB_cell_geodata, TotalPop / cell_km2))) %>%
+  addPolylines(
+    data = CMAQ_envelope %>% st_transform(4326),
+    weight = 2,
+    color = "black") %>%
+  addLegend(
+    title = "TotalPop/km<sup>2</sup>",
+    opacity = 1.0,
+    colors = color_for_pop_km2(seq(0, 30e3, by = 5e3)),
+    labels = format_SI(seq(0, 30e3, by = 5e3)))
 
-ISRM_SFAB_cell_geodata %>%
-  as("Spatial") %>%
-  write_geojson(
-    here::here("Build", "Geodata"),
-    str_glue("ISRM_SFAB_cell_geodata-{str_datestamp()}"))
+#'----------------------------------------------------------------------
+#'
+#' Export copies of the following to `Build/Geodata/`:
+#'
+#' - `ISRM_SFAB_cell_geodata` (as GeoJSON)
+#' - `CMAQ_raster_template` (as GeoTIFF)
+#' - `CMAQ_envelope` (as GeoJSON)
+#'
+#'----------------------------------------------------------------------
+
+# geotools::write_geojson(
+#   as(ISRM_SFAB_cell_geodata, "Spatial"),
+#   dsn = here::here("Build", "Geodata"),
+#   layer = "ISRM_SFAB_cell_geodata")
+
+geotools::write_geojson(
+  as(st_as_sf(CMAQ_envelope) %>% mutate(FID = 1), "Spatial"),
+  dsn = here::here("Build", "Geodata"),
+  layer = "CMAQ_envelope")
+
+terra::writeRaster(
+  CMAQ_raster_template,
+  here::here("Build", "Geodata", "CMAQ_raster_template.tif"))
+
