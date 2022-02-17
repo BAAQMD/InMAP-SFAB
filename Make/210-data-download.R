@@ -8,23 +8,23 @@
 #'
 #'----------------------------------------------------------------------
 
-# if (isFALSE(fs::file_exists(ISRM_CA_nc_path))) {
+# if (isFALSE(fs::file_exists(ISRM_CA_NC_PATH))) {
 #
 #   message(
 #     "[210-data-download] ",
-#     fs::path_rel(ISRM_CA_nc_path, here::here()),
+#     fs::path_rel(ISRM_CA_NC_PATH, here::here()),
 #     " does not yet exist; downloading now")
 #
-#   response <- httr::GET(ISRM_CA_nc_url)
+#   response <- httr::GET(ISRM_CA_NC_URL)
 #   html_content <- httr::content(response)
 #
-#   parsed_url <- httr::parse_url(ISRM_CA_nc_url)
+#   parsed_url <- httr::parse_url(ISRM_CA_NC_URL)
 #
 #   response <-
 #     httr::POST(
 #       "https://drive.google.com/u/0/uc",
 #       query = parsed_url$query,
-#       httr::write_disk(ISRM_CA_nc_path),
+#       httr::write_disk(ISRM_CA_NC_PATH),
 #       httr::progress())
 #
 #   httr::stop_for_status(response) # ensure we got a "200 OK"
@@ -41,11 +41,11 @@
 #'
 #'----------------------------------------------------------------------
 
-if (isFALSE(fs::file_exists(ISRM_full_nc_path))) {
+if (isFALSE(fs::file_exists(ISRM_FULL_NC_PATH))) {
 
   message(
     "[210-data-download] ",
-    fs::path_rel(ISRM_full_nc_path, here::here()),
+    fs::path_rel(ISRM_FULL_NC_PATH, here::here()),
     " does not yet exist; downloading now")
 
   nc_zip_path <-
@@ -53,7 +53,7 @@ if (isFALSE(fs::file_exists(ISRM_full_nc_path))) {
 
   response <-
     httr::GET(
-      ISRM_full_nc_url,
+      ISRM_FULL_NC_URL,
       httr::write_disk(nc_zip_path),
       httr::progress())
 
