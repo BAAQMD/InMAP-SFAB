@@ -25,8 +25,8 @@
 
 leaflet_map_SFBA() %>%
   addPolygons(
-    data = ISRM_SFAB_cell_geometries,
-    popup = leafpop::popupTable(ISRM_SFAB_cell_geometries, zcol = c("isrm", "TotalPop", "cell_km2")),
+    data = ISRM_SFAB_cell_geodata,
+    popup = leafpop::popupTable(ISRM_SFAB_cell_geodata, zcol = c("isrm", "cell_km2")),
     color = "black",
     weight = 0.5, fillColor = "white", fillOpacity = 0.1) %>%
   addPolygons(
