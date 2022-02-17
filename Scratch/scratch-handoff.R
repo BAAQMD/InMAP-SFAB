@@ -116,9 +116,8 @@ local({
 
 #'----------------------------------------------------------------------
 #'
-#' Attempt to map population density.
-#'
-#' As of 2022-02-15, thins doesn't seem to be working correctly.
+#' Map population density, using leaflet.
+#' This seems to vary at the 1 km^2 scale.
 #'
 #'----------------------------------------------------------------------
 
