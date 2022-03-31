@@ -74,6 +74,7 @@ SFAB_CMAQ_RWC_ems_stobj <- local({
       all_of(CMAQ_EMS_VARS),
       set_units, "ton/yr"))
 
+  # Clip/mask to `SFAB_boundary`
   CMAQ_stobj %>%
     .[require_data(SFAB_boundary)]
 
