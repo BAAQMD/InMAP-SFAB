@@ -2,8 +2,8 @@
 
 Contents supplied by UW team on 2022-02-10 with Phil Martien via email with link to Dropbox folder:
 
-- Data/ca_isrm_gridcells.csv
-- Data/isrm_boundaries_latlons.csv
+- Data/ISRM/ca_isrm_gridcells.csv
+- Data/ISRM/isrm_boundaries_latlons.csv
 
 For additional documentation, see `[References/Handoff/]`.
 
