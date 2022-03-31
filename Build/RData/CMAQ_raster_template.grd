@@ -1,0 +1,19 @@
+[general]
+[georeference]
+nrows=224
+ncols=164
+xmin=0
+ymin=0
+xmax=164
+ymax=224
+projection=+proj=lcc +lat_0=37 +lon_0=-120.5 +lat_1=30 +lat_2=60 +x_0=220000 +y_0=16000 +R=6370000 +units=km +no_defs
+[data]
+datatype=FLT4S
+nodatavalue=nan
+byteorder=little
+nbands=1
+minvalue=0
+maxvalue=36736
+categorical=FALSE
+[description]
+layername=CMAQ_cell
