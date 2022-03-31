@@ -84,7 +84,7 @@ render_flextable <- function (
     f <- function (x) format_digits(x, digits = digits)
     table_object <-
       table_object %>%
-      set_formatter(
+      flextable::set_formatter(
         values = setNames(
           rep_list(f, length(j)),
           names(table_data)[j]))
