@@ -37,6 +37,7 @@ render_flextable_exposure <- function(
     flextable::set_header_labels(
       pol_abbr = " ",
       pop_h1 = " ",
+      src_h1 = " ",
       cnty_name = " ") %>%
     flextable_align_where(
       is_bare_double,
