@@ -3,7 +3,8 @@ render_flextable <- function (
   id = NULL, # bookmark ID
   align = NULL,
   caption = NULL,
-  digits = NULL,
+  digits = flextable::get_flextable_defaults()$digits,
+  na = "-",
   style = c("basic", "hover", "condensed"),
   font_size = 16,
   position = "center",
@@ -79,16 +80,11 @@ render_flextable <- function (
     }
   }
 
-  if (is.numeric(digits)) {
-    j <- which(sapply(table_data, rlang::is_bare_double))
-    f <- function (x) format_digits(x, digits = digits)
-    table_object <-
-      table_object %>%
-      flextable::set_formatter(
-        values = setNames(
-          rep_list(f, length(j)),
-          names(table_data)[j]))
-  }
+  table_object <-
+    table_object %>%
+    flextable::colformat_double(
+      digits = digits,
+      na_str = na)}
 
   #
   # Default alignments for columns are controlled by the `align` argument
