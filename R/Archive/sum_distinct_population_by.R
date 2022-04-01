@@ -1,4 +1,4 @@
-summarise_population_by <- function (
+sum_distinct_population_by <- function (
   input_data,
   ...,
   id_vars = NULL,
@@ -22,20 +22,27 @@ summarise_population_by <- function (
   if (is.null(id_vars)) {
     id_vars <- tidyselect::vars_select(
       input_vars,
-      starts_with("cell_"),
-      starts_with("tract_"),
-      starts_with("blkgrp_"),
-      starts_with("block_")
-    )
+      any_of(c(
+        "cell_id",
+        "tract_id",
+        "blkgrp_id",
+        "block_id")))
+    if (length(id_vars) == 0) {
+      try(id_vars <- vartools::find_id_var(input_data), silent = TRUE)
+    }
     msg("auto-detected id_vars: ", str_csv(id_vars))
   }
+
+  pop_qty_vars <-
+    find_pop_qty_vars(
+      input_data)
 
   distinct_data <-
     input_data %>%
     select(
-      any_of(by_vars),
       all_of(id_vars),
-      all_of(qty_vars)) %>%
+      any_of(by_vars),
+      all_of(pop_qty_vars)) %>%
     distinct()
 
   summed_data <-
