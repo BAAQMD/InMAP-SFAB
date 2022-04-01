@@ -10,11 +10,11 @@ map_geodata <-
     pol_abbr == "PM25_TOT") %>%
   drop_units() %>%
   sum_concentration_by(
-    all_of(ISRM_ID_VARS)) %>%
+    all_of(ISRM_ID_VAR)) %>%
   left_join(
     require_data(ISRM_SFAB_cell_geometries),
     .,
-    by = all_of(ISRM_ID_VARS))
+    by = all_of(ISRM_ID_VAR))
 
 mapview::mapview(
   map_geodata,
@@ -39,7 +39,7 @@ SFAB_ISRM_pop_2020_data %>%
 SFAB_ISRM_demo_conc_data %>%
   drop_units() %>%
   sum_concentration_by(
-    pol_abbr, all_of(ISRM_ID_VARS), cell_km2) %>%
+    pol_abbr, all_of(ISRM_ID_VAR), cell_km2) %>%
   group_by(
     pol_abbr) %>%
   filter(

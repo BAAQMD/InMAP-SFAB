@@ -10,7 +10,7 @@
 
 ISRM_SFAB_cell_ids <-
   ISRM_SFAB_cell_geometries %>%
-  pull(isrm)
+  pull(all_of(ISRM_ID_VAR))
 
 ISRM_SFAB_array <- local({
 
@@ -62,7 +62,7 @@ ISRM_SFAB_cube <-
 #' - `ISRM_full_cell_geodata`; and
 #' - `ISRM_CA_cell_geodata`
 #'     - A subset of `ISRM_full_cell_geodata`
-#'         - Where `isrm` is in `ISRM_SFAB_cell_ids`
+#'         - Where `ISRM_id` is in `ISRM_SFAB_cell_ids`
 #'
 #'----------------------------------------------------------------------
 
@@ -82,7 +82,7 @@ ISRM_full_cell_geodata <- local({
       nrow(.) == ISRM_FULL_CELL_COUNT,
       all(.$allcells == 1:nrow(.))) %>%
     mutate(
-      isrm = allcells - 1L) # **NOTE**: `isrm` starts at 0; `allcells` starts at 1
+      !!ISRM_ID_VAR := allcells - 1L) # **NOTE**: `isrm` starts at 0; `allcells` starts at 1
 
   rm(ISRM_full_tidync_obj)
 
@@ -94,11 +94,12 @@ ISRM_full_cell_geodata <- local({
       unmatched_keys_left = "abort",
       unmatched_keys_right = "abort",
       na_keys = "abort"),
-    by = "isrm")
+    by = ISRM_ID_VAR)
 
 })
 
 ISRM_SFAB_cell_geodata <-
   ISRM_full_cell_geodata %>%
-  filter(
-    isrm %in% ISRM_SFAB_cell_ids)
+  filter(across(
+    c(ISRM_ID_VAR),
+    ~ . %in% ISRM_SFAB_cell_ids))

@@ -35,12 +35,7 @@ SFAB_ISRM_demo_data <- local({
 
   SFAB_ISRM_demo_data <-
     csv_data %>%
-    rename(
-      PM25_TOT = TotalPM25,
-      PM25_PRI = PrimaryPM25,
-      NatAmer = Native_American,
-      PcIsl = Pacific_Islander,
-      Multi = Multiple) %>%
+    tidy_InMAP_names()
     mutate(across(
       any_of(ISRM_CONC_VARS),
       set_units, "ug/m3")) %>%
@@ -68,7 +63,7 @@ SFAB_ISRM_demo_data <- local({
       c(DeathsK_White, DeathsK_Black, DeathsK_Asian, DeathsK_Hispanic),
       set_units, "death/km^2")) %>%
     mutate(
-      isrm = as.integer(isrm),
+      ISRM_id = as.integer(ISRM_id),
       Area = PM25_TOT / TotalPM_area)
 
 })
@@ -99,13 +94,13 @@ SFAB_ISRM_demo_data <- local({
 SFAB_ISRM_demo_conc_geodata <-
   SFAB_ISRM_demo_data %>%
   select(
-    all_of(ISRM_ID_VARS),
+    all_of(ISRM_ID_VAR),
     any_of(ISRM_SRC_VARS),
     any_of(ISRM_CONC_VARS)) %>%
   powerjoin::power_right_join(
     ISRM_SFAB_cell_geometries,
     .,
-    by = ISRM_ID_VARS,
+    by = ISRM_ID_VAR,
     check = powerjoin::check_specs(
       duplicate_keys_left = "abort",
       unmatched_keys_left = "warn",
@@ -136,10 +131,10 @@ SFAB_ISRM_demo_conc_data <-
 SFAB_ISRM_pop_2020_geodata <-
   ISRM_SFAB_cell_geometries %>%
   select(
-    all_of(ISRM_ID_VARS)) %>%
+    all_of(ISRM_ID_VAR)) %>%
   with_interpolated_population(
     from = SFAB_tract_2020_geodata,
-    id_vars = ISRM_ID_VARS,
+    id_vars = ISRM_ID_VAR,
     na = 0,
     verbose = TRUE)
 
@@ -147,7 +142,7 @@ SFAB_ISRM_pop_2020_data <-
   SFAB_ISRM_pop_2020_geodata %>%
   st_drop_geometry() %>%
   pivot_longer(
-    -all_of(ISRM_ID_VARS),
+    -all_of(ISRM_ID_VAR),
     names_to = "pop_h3",
     values_to = "pop_qty") %>%
   mutate(
@@ -178,7 +173,7 @@ SFAB_ISRM_demo_ems_data <- local({
     csv_data %>%
     semi_join(
       ISRM_SFAB_cell_geometries,
-      by = ISRM_ID_VARS)
+      by = ISRM_ID_VAR)
 
   tidied_data <-
     filtered_data %>%

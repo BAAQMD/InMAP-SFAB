@@ -23,6 +23,7 @@ ISRM_CA_cell_lookup <-
     col_names = c("ISRM_CA_cell_id", "isrm"),
     col_types = cols(.default = col_integer()),
     skip = 1) %>%
+  tidy_InMAP_names() %>%
   ensurer::ensure(
     nrow(.) == ISRM_CA_CELL_COUNT)
 
@@ -46,7 +47,8 @@ ISRM_full_cell_geometries <- local({
         isrm = col_integer(),
         .default = col_double())) %>%
     ensurer::ensure(
-      nrow(.) == ISRM_FULL_CELL_COUNT)
+      nrow(.) == ISRM_FULL_CELL_COUNT) %>%
+    tidy_InMAP_names()
 
   # To create a 2-column XY matrix
   as_coord_matrix <- function (
@@ -73,9 +75,11 @@ ISRM_full_cell_geometries <- local({
 
   # Convert to `sf` object using `st_as_sf()`.
   full_geom_data %>%
-    transmute(
-      isrm,
+    mutate(
       geometry = st_sfc(poly, crs = ISRM_CRS)) %>%
+    select(
+      all_of(ISRM_ID_VAR),
+      geometry) %>%
     st_as_sf() %>%
     mutate(
       cell_km2 = drop_units(set_units(st_area(.), "km^2"))) %>%
