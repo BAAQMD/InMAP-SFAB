@@ -5,6 +5,7 @@ summarise_and_spread <- function (
   rows_from,
   cols_from,
   label = "(all)",
+  complete = TRUE,
   .groups = "keep"
 ) {
 
@@ -44,6 +45,13 @@ summarise_and_spread <- function (
       names_from = all_of(cols_from)) %>%
     arrange(
       across(all_of(c(grp_vars, rows_from))))
+
+  if (isTRUE(complete)) {
+    complete_nse <- function (.data, ...) tidyr::complete(.data, !!!rlang::ensyms(...))
+    # key_data <- expand_nse(spread_data, !!grp_vars, !!rows_from)
+    # spread_data <- right_join(spread_data, key_data, by = names(key_data))
+    spread_data <- complete_nse(spread_data, !!grp_vars, !!rows_from)
+  }
 
   if (.groups == "keep") {
     spread_data <- group_by(spread_data, across(all_of(grp_vars)))
