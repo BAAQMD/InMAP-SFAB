@@ -20,8 +20,7 @@
 #' @export
 msg <- function (...) {
 
-  verbose <- get0("verbose", ifnotfound = getOption("verbose", default = TRUE))
-  if (isFALSE(isTRUE(verbose))) return("verbose is FALSE")
+  verbose <- get0("verbose", ifnotfound = TRUE) # WAS: getOption("verbose", default = TRUE))
 
   context <- NULL
 
