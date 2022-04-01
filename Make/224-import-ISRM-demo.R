@@ -33,14 +33,17 @@ SFAB_ISRM_demo_data <- local({
   msg("renaming fields and setting units in `SFAB_ISRM_demo_data`")
   msg("calculating Area = PM25_TOT / TotalPM_area")
 
-  SFAB_ISRM_demo_data <-
+  tidied_data <-
     csv_data %>%
     tidy_InMAP_names()
+
+  unit_aware_data <-
+    tidied_data %>%
     mutate(across(
       any_of(ISRM_CONC_VARS),
-      set_units, "ug/m3")) %>%
+      set_units, "ug/m^3")) %>%
     mutate(across(
-      c(Total, White, Black, NatAmer, Asian, PcIsl, Other, Multi, Hispanic),
+      any_of(ISRM_POP_VARS),
       set_units, "person")) %>%
     mutate(
       cell_km2 = csv_cell_km2) %>%
@@ -65,6 +68,9 @@ SFAB_ISRM_demo_data <- local({
     mutate(
       ISRM_id = as.integer(ISRM_id),
       Area = PM25_TOT / TotalPM_area)
+
+  SFAB_ISRM_demo_data <-
+    unit_aware_data
 
 })
 
@@ -169,20 +175,19 @@ SFAB_ISRM_demo_ems_data <- local({
     read_csv(
       verbose = TRUE)
 
-  filtered_data <-
+  tidied_data <-
     csv_data %>%
+    tidy_InMAP_names() %>%
+    select(-any_of(c("...1")))
+
+  filtered_data <-
+    tidied_data %>%
     semi_join(
       ISRM_SFAB_cell_geometries,
       by = ISRM_ID_VAR)
 
-  tidied_data <-
+  unit_aware_data <-
     filtered_data %>%
-    rename(
-      src_h1 = Sector,
-      SCC_id = SCC) %>%
-    mutate(across(
-      c(SCC_id),
-      format_SCC, digits = 10)) %>%
     # mutate(across(
     #   c(NH3),
     #   set_units, "ton/yr")) %>%
@@ -199,9 +204,9 @@ SFAB_ISRM_demo_ems_data <- local({
       c(Velocity),
       set_units, "m/s"))
 
-  tidied_data %>%
+  unit_aware_data %>%
     select(
-      all_of(ISRM_ID_VARS),
+      all_of(ISRM_ID_VAR),
       any_of(ISRM_SRC_VARS),
       any_of(ISRM_EMS_VARS)) %>%
     pivot_longer(
@@ -215,7 +220,7 @@ SFAB_ISRM_demo_ems_data <- local({
     ensurer::ensure(
       units::deparse_unit(.$ems_qty) == "ton yr-1") %>%
     mutate(
-      ems_qty = drop_units(ems_qty),
+      #ems_qty = drop_units(ems_qty),
       ems_unit = "ton/yr")
 
 })
@@ -239,7 +244,7 @@ SFAB_ISRM_demo_nested_geodata <- local({
     SFAB_ISRM_demo_conc_geodata %>%
     st_drop_geometry() %>%
     select(
-      all_of(ISRM_ID_VARS),
+      all_of(ISRM_ID_VAR),
       any_of(nest_vars)) %>%
     nest(
       conc_data = any_of(nest_vars))
@@ -250,20 +255,20 @@ SFAB_ISRM_demo_nested_geodata <- local({
       -any_of(nest_vars)) %>%
     left_join(
       nested_conc_data,
-      by = ISRM_ID_VARS)
+      by = ISRM_ID_VAR)
 
   nested_pop_data <-
     SFAB_ISRM_pop_2020_data %>%
     nest(
       pop_data = starts_with("pop")) %>%
     select(
-      all_of(ISRM_ID_VARS),
+      all_of(ISRM_ID_VAR),
       pop_data)
 
   nested_conc_geodata %>%
     powerjoin::power_left_join(
       nested_pop_data,
-      by = ISRM_ID_VARS,
+      by = ISRM_ID_VAR,
       check = powerjoin::check_specs(
         duplicate_keys_right = "abort",
         unmatched_keys_left = "warn")) %>%
@@ -279,20 +284,20 @@ SFAB_ISRM_demo_nested_geodata <- local({
 #'
 #'----------------------------------------------------------------------
 
-SFAB_ISRM_demo_2020_exp_data <-
-  SFAB_ISRM_pop_2020_data %>%
-  sum_population_by(
-    all_of(ISRM_ID_VARS),
-    pop_h1) %>%
-  filter(
-    drop_units(pop_qty) > 0) %>%
-  left_join(
-    SFAB_ISRM_demo_conc_data,
-    by = ISRM_ID_VARS) %>%
-  filter(
-    drop_units(conc_qty) > 0) %>%
-  mutate(
-    exp_qty = conc_qty * pop_qty)
+# SFAB_ISRM_demo_2020_exp_data <-
+#   SFAB_ISRM_pop_2020_data %>%
+#   sum_population_by(
+#     all_of(ISRM_ID_VAR),
+#     pop_h1) %>%
+#   filter(
+#     drop_units(pop_qty) > 0) %>%
+#   left_join(
+#     SFAB_ISRM_demo_conc_data,
+#     by = ISRM_ID_VAR) %>%
+#   filter(
+#     drop_units(conc_qty) > 0) %>%
+#   mutate(
+#     exp_qty = conc_qty * pop_qty)
 
 #'----------------------------------------------------------------------
 #'
@@ -305,4 +310,4 @@ write_data(SFAB_ISRM_demo_conc_data)
 write_data(SFAB_ISRM_pop_2020_geodata)
 write_data(SFAB_ISRM_pop_2020_data)
 write_data(SFAB_ISRM_demo_ems_data)
-write_data(SFAB_ISRM_demo_2020_exp_data)
+# write_data(SFAB_ISRM_demo_2020_exp_data)
