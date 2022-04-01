@@ -5,18 +5,21 @@ render_flextable_exposure <- function(
   format = "character"
 ) {
 
-  format_pollutant <- function (x, na = "", format = "markdown") {
+  pollutant_label <- function (x, unit = NULL, format = "markdown", na = "") {
     pol <- str_extract(x, regex("NOx|PM2\\.?5", ignore_case = TRUE))
-    unit <- unit_for_concentration(pol, format = format)
     humanized <- humanize_pollutant(x, format = format)
+    if (is.null(unit)) {
+      unit <- unit_for_concentration(pol, format = format)
+    }
     glued <- str_glue("{humanized}, {unit}")
-    return(if_else(is.na(x), na, as.character(glued)))
+    spliced <- if_else(is.na(x), na, as.character(glued))
+    return(spliced)
   }
 
   table_object <-
     table_data %>%
     mutate(
-      pol_abbr = format_pollutant(
+      pol_abbr = pollutant_label(
         pol_abbr, format = "markdown")) %>%
     render_flextable(
       ...,
