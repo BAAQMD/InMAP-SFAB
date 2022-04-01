@@ -53,11 +53,20 @@ SFAB_ISRM_demo_conc_data %>%
 #'
 #'----------------------------------------------------------------------
 
-SFAB_ISRM_demo_2020_exp_data %>%
-  summarise_exposure_by(
-    pol_abbr) %>%
-  select(
-    pol_abbr, `exp/pop`)
+SFAB_ISRM_pop_2020_data %>%
+  summarise_exposure_to(
+    SFAB_ISRM_demo_conc_data,
+    by = pol_abbr)
+
+SFAB_ISRM_pop_2020_data %>%
+  summarise_exposure_to(
+    SFAB_ISRM_demo_conc_data,
+    by = c(pol_abbr, pop_h1))
+
+SFAB_ISRM_pop_2020_data %>%
+  summarise_exposure_to(
+    SFAB_ISRM_demo_conc_data,
+    by = c(pol_abbr, src_h1))
 
 #'----------------------------------------------------------------------
 #'
@@ -65,10 +74,10 @@ SFAB_ISRM_demo_2020_exp_data %>%
 #'
 #'----------------------------------------------------------------------
 
-SFAB_ISRM_demo_2020_exp_data %>%
-  drop_units() %>%
-  summarise_exposure_by(
-    pol_abbr, src_h1, pop_h1) %>%
+SFAB_ISRM_pop_2020_data %>%
+  summarise_exposure_to(
+    SFAB_ISRM_demo_conc_data,
+    by = c(pol_abbr, src_h1, pop_h1)) %>%
   pivot_table(
     rows = "src_h1",
     columns = c("pol_abbr", "pop_h1"),
@@ -85,30 +94,27 @@ SFAB_ISRM_demo_2020_exp_data %>%
 local({
 
   table_data <-
-    SFAB_ISRM_demo_2020_exp_data %>%
-    # filter(
-    #   pol_abbr %in% c("PM25_TOT", "PM25_PRI")) %>%
-    drop_units() %>%
-    # summarise_exposure_by(
-    #   pol_abbr, src_h1, pop_h1) %>%
-    # mutate(
-    #   src_h1 = factor(src_h1)) %>%
+    SFAB_ISRM_pop_2020_data %>%
+    summarise_exposure_to(
+      SFAB_ISRM_demo_conc_data,
+      by = c(pol_abbr, src_h1, pop_h1)) %>%
     group_by(
       pol_abbr) %>%
     summarise_and_spread(
       .fun = summarise_exposure_by,
       values_from = "exp/pop",
       rows_from = "src_h1",
-      cols_from = "pop_h1",
-      label = "(all)",
-      .groups = "keep")
+      cols_from = "pop_h1")
 
   table_data %>%
+    drop_units() %>%
     group_by(
       pol_abbr) %>%
     render_flextable_exposure(
-      caption = "Exposures calculated from demo data supplied by UW team, March 2022.",
-      digits = 2)
+      caption = str_glue(
+        "Exposures calculated from: (a) Census 2020 tract-level residential counts; and ",
+        "(b) concentration estimates, on the SF air basin subset of the full ISRM grid, supplied by the UW team in March 2022."),
+      digits = 3)
 
 })
 
