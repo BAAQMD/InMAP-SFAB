@@ -115,3 +115,8 @@ ISRM_SFAB_cell_geometries <-
 write_data(ISRM_CA_cell_lookup)
 write_data(ISRM_SFAB_cell_geometries)
 write_data(ISRM_full_cell_geometries)
+
+write_geojson(
+  as(ISRM_SFAB_cell_geometries, "Spatial"),
+  dsn = build_path("Geodata"),
+  layer = "ISRM_SFAB_cell_geometries")
