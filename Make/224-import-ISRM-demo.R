@@ -309,4 +309,22 @@ write_data(SFAB_ISRM_demo_conc_data)
 write_data(SFAB_ISRM_pop_2020_geodata)
 write_data(SFAB_ISRM_pop_2020_data)
 write_data(SFAB_ISRM_demo_ems_data)
+
+SFAB_ISRM_demo_ems_data %>%
+  sum_emissions_by(
+    ISRM_id,
+    pol_abbr,
+    signif = 6) %>%
+  write_csv(
+    build_path("Demo", "SFAB_ISRM_demo_ems_data-pol.csv"))
+
+SFAB_ISRM_demo_ems_data %>%
+  sum_emissions_by(
+    ISRM_id,
+    src_h1,
+    pol_abbr,
+    signif = 6) %>%
+  write_csv(
+    build_path("Demo", "SFAB_ISRM_demo_ems_data-pol_x_src.csv"))
+
 # write_data(SFAB_ISRM_demo_2020_exp_data)
