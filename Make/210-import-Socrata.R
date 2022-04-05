@@ -178,3 +178,10 @@ write_data(SFAB_tract_2020_geodata)
 write_data(SFAB_tract_2020_raceeth_data)
 write_data(SFAB_tract_2020_polygons)
 
+SFAB_tract_2020_raceeth_data %>%
+  select(
+    tract_id,
+    num_range("pop_h", 1:3),
+    pop_qty) %>%
+  write_csv(
+    build_path("Population", "SFAB_tract_2020_raceeth_data.csv"))
