@@ -105,10 +105,20 @@ SFAB_CMAQ_RWC_ems_data %>%
     pol_abbr, src_h1)
 
 SFAB_ISRM_demo_ems_data %>%
+  drop_units() %>%
   filter(
     src_h1 == "rwc") %>%
   sum_emissions_by(
     pol_abbr, src_h1)
+
+SFAB_ISRM_demo_ems_data %>%
+  drop_units() %>%
+  tabulate_emissions_by(
+    src_h1, pol_abbr) %>%
+  arrange(
+    desc(PM25))
+
+#' TODO: compare PM25_PRI (a) emissions (regional sum) & (b) avg regional exposures (compare ratio a/b for both demo and )
 
 #'----------------------------------------------------------------------
 #'
