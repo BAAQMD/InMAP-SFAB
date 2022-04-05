@@ -170,7 +170,7 @@ SFAB_ISRM_demo_ems_data <- local({
       "UW",
       "2022-03-07",
       "ISRM",
-      "ca_nei.csv") %>%
+      "ca_nei.csv.gz") %>%
     read_csv(
       verbose = TRUE)
 
