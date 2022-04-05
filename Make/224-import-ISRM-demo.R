@@ -3,16 +3,15 @@ require_data(SFAB_tract_2020_geodata)
 
 #'----------------------------------------------------------------------
 #'
-#' Import demo dataset from `~/Dropbox/Bay Area ISRM/` (2022-03-30).
+#' Import demo dataset (NEI2014),
 #'
 #'----------------------------------------------------------------------
 
 SFAB_ISRM_demo_data <- local({
 
-  csv_path <- fs::path(
-    "~", "Dropbox",
-    "Bay Area ISRM",
-    "Data",
+  csv_path <- data_path(
+    "UW",
+    "2022-03-07",
     "ISRM",
     "bay_inmap_result.csv")
 
@@ -167,9 +166,9 @@ SFAB_ISRM_pop_2020_data <-
 SFAB_ISRM_demo_ems_data <- local({
 
   csv_data <-
-    fs::path(
-      "~", "Dropbox", "Bay Area ISRM",
-      "Data",
+    data_path(
+      "UW",
+      "2022-03-07",
       "ISRM",
       "ca_nei.csv") %>%
     read_csv(

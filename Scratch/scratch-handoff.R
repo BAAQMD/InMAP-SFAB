@@ -190,15 +190,15 @@ ggplot() +
 
 # geotools::write_geojson(
 #   as(ISRM_SFAB_cell_geodata, "Spatial"),
-#   dsn = here::here("Build", "Geodata"),
+#   dsn = build_path("Geodata"),
 #   layer = "ISRM_SFAB_cell_geodata")
 
 geotools::write_geojson(
   as(st_as_sf(CMAQ_envelope) %>% mutate(FID = 1), "Spatial"),
-  dsn = here::here("Build", "Geodata"),
+  dsn = build_path("Geodata"),
   layer = "CMAQ_envelope")
 
 terra::writeRaster(
   CMAQ_raster_template,
-  here::here("Build", "Geodata", "CMAQ_raster_template.tif"))
+  build_path("Geodata", "CMAQ_raster_template.tif"))
 

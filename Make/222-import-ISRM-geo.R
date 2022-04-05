@@ -18,7 +18,9 @@ CMAQ_envelope <-
 
 ISRM_CA_cell_lookup <-
   data_path(
-    "ISRM", "ca_isrm_gridcells.csv") %>%
+    "UW",
+    "2022-02-10",
+    "ca_isrm_gridcells.csv") %>%
   read_csv(
     col_names = c("ISRM_CA_cell_id", "isrm"),
     col_types = cols(.default = col_integer()),

@@ -21,6 +21,10 @@ data_path <- function (...) {
   here::here("Data", ...)
 }
 
+build_path <- function (...) {
+  here::here("Build", ...)
+}
+
 ISRM_ID_VAR    <- c("ISRM_id")
 ISRM_SRC_VARS  <- c("src_h1", "SCC_id")
 ISRM_EMS_VARS  <- c("PM25", "NOx", "SOx", "VOC", "NH3")
