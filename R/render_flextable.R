@@ -84,7 +84,7 @@ render_flextable <- function (
     table_object %>%
     flextable::colformat_double(
       digits = digits,
-      na_str = na)}
+      na_str = na)
 
   #
   # Default alignments for columns are controlled by the `align` argument
