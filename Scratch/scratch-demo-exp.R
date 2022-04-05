@@ -4,21 +4,47 @@
 #'
 #'----------------------------------------------------------------------
 
-map_geodata <-
-  SFAB_ISRM_demo_conc_data %>%
-  filter(
-    pol_abbr == "PM25_TOT") %>%
-  drop_units() %>%
-  sum_concentration_by(
-    all_of(ISRM_ID_VAR)) %>%
-  left_join(
-    require_data(ISRM_SFAB_cell_geometries),
-    .,
-    by = all_of(ISRM_ID_VAR))
+mapview_concentration <- function (
+  conc_geodata,
+  pollutant,
+  digits = 2,
+  unit = NULL,
+  zcol = "conc_qty"
+) {
 
-mapview::mapview(
-  map_geodata,
-  zcol = "conc_qty")
+  if (is.null(unit)) {
+    unit <- unit_for_concentration(pollutant, format = "character")
+  }
+
+  map_geodata <-
+    conc_data %>%
+    filter(
+      pol_abbr == "PM25_TOT") %>%
+    drop_units() %>%
+    sum_concentration_by(
+      all_of(ISRM_ID_VAR)) %>%
+    left_join(
+      require_data(ISRM_SFAB_cell_geometries),
+      .,
+      by = all_of(ISRM_ID_VAR))
+
+  labels <-
+    map_geodata[[zcol]] %>%
+    format_digits(digits) %>%
+    str_suffix(str_glue(" {unit}")) %>%
+    replace(is.na(map_geodata[[zcol]]), "NA")
+
+  mapview::mapview(
+    map_geodata,
+    label = labels,
+    layer.name = str_glue("{pollutant} ({unit})"),
+    zcol = zcol)
+
+}
+
+SFAB_ISRM_demo_conc_data %>%
+  mapview_concentration(
+    "PM25_TOT")
 
 #'----------------------------------------------------------------------
 #'
@@ -113,7 +139,9 @@ local({
     render_flextable_exposure(
       caption = str_glue(
         "Exposures calculated from: (a) Census 2020 tract-level residential counts; and ",
-        "(b) concentration estimates, on the SF air basin subset of the full ISRM grid, supplied by the UW team in March 2022."),
+        "(b) concentration estimates, on the SF air basin subset of the full ISRM grid. ",
+        "The latter were supplied by the UW team in March 2022, and appear to be pulling ",
+        "emissions from the 2014 NEI."),
       digits = 3)
 
 })
