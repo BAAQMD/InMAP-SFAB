@@ -1,6 +1,8 @@
 require_data(SFAB_ISRM_demo_ems_data)
 require_data(SFAB_ISRM_demo_conc_data)
 require_data(SFAB_ISRM_pop_2020_data)
+require_data(ISRM_SFAB_cell_geometries)
+require_data(ISRM_ID_VAR)
 
 #'
 #' In the support work for the NG appliances rulemaking, the regional average
@@ -36,8 +38,13 @@ demo_PM25_iF <- local({
 
   demo_PM25_ems_qty <-
     SFAB_ISRM_demo_ems_data %>%
-    filter(pol_abbr == "PM25") %>%
-    mutate(ems_qty = set_units(ems_qty, unique(ems_unit), mode = "character")) %>%
+    filter(
+      pol_abbr == "PM25") %>%
+    semi_join(
+      ISRM_SFAB_cell_geometries,
+      by = ISRM_ID_VAR) %>%
+    mutate(
+      ems_qty = set_units(ems_qty, unique(ems_unit), mode = "character")) %>%
     pull(ems_qty) %>%
     sum()
 
