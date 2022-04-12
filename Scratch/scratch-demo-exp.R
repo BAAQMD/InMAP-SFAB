@@ -1,11 +1,14 @@
+require_data(SFAB_ISRM_demo_conc_data)
+require_data(SFAB_ISRM_pop_2020_data)
+
 #'----------------------------------------------------------------------
 #'
 #' Quick map of `PM25_TOT`.
 #'
 #'----------------------------------------------------------------------
 
-mapview_concentration <- function (
-  conc_geodata,
+mapview_ISRM_concentrations <- function (
+  ISRM_data,
   pollutant,
   digits = 2,
   unit = NULL,
@@ -17,7 +20,7 @@ mapview_concentration <- function (
   }
 
   map_geodata <-
-    conc_data %>%
+    ISRM_data %>%
     filter(
       pol_abbr == "PM25_TOT") %>%
     drop_units() %>%
@@ -43,8 +46,8 @@ mapview_concentration <- function (
 }
 
 SFAB_ISRM_demo_conc_data %>%
-  mapview_concentration(
-    "PM25_TOT")
+  mapview_ISRM_concentrations(
+    pollutant = "PM25_TOT")
 
 #'----------------------------------------------------------------------
 #'
