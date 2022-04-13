@@ -22,7 +22,7 @@ mapview_ISRM_concentrations <- function (
   map_geodata <-
     ISRM_data %>%
     filter(
-      pol_abbr == "PM25_TOT") %>%
+      pol_abbr == pollutant) %>%
     drop_units() %>%
     sum_concentration_by(
       all_of(ISRM_ID_VAR)) %>%
@@ -35,19 +35,51 @@ mapview_ISRM_concentrations <- function (
     map_geodata[[zcol]] %>%
     format_digits(digits) %>%
     str_suffix(str_glue(" {unit}")) %>%
-    replace(is.na(map_geodata[[zcol]]), "NA")
+    replace(is.na(map_geodata[[zcol]]), "NA") %>%
+    str_c("#", map_geodata[[ISRM_ID_VAR]], ": ", ., " ", pollutant)
 
-  mapview::mapview(
-    map_geodata,
-    label = labels,
-    layer.name = str_glue("{pollutant} ({unit})"),
-    zcol = zcol)
+  html_table <- function (.data) {
+    table_data <- spread(drop_units(.data), pol_abbr, conc_qty)
+    knitr::kable(table_data, format = "html")
+  }
+
+  popup_html <-
+    ISRM_data %>%
+    nest(
+      popup_data = c(src_h1, pol_abbr, conc_qty)) %>%
+    mutate(
+      popup_html = map_chr(popup_data, html_table)) %>%
+    left_join(
+      map_geodata,
+      .,
+      by = ISRM_ID_VAR) %>%
+    pull(
+      popup_html)
+
+  map_object <-
+    mapview::mapview(
+      map_geodata,
+      label = labels,
+      layer.name = str_glue("{pollutant} ({unit})"),
+      popup = popup_html,
+      zcol = zcol)
+
+  return(map_object)
 
 }
 
-SFAB_ISRM_demo_conc_data %>%
+demo_map_PM25_PRI <-
+  SFAB_ISRM_demo_conc_data %>%
   mapview_ISRM_concentrations(
-    pollutant = "PM25_TOT")
+    pollutant = "PM25_PRI")
+
+show(demo_map_PM25_PRI)
+
+write_leaflet(
+  demo_map_PM25_PRI,
+  build_path(
+    "Demo",
+    "SFAB_ISRM_demo_conc_data-PM25_PRI.html"))
 
 #'----------------------------------------------------------------------
 #'

@@ -327,4 +327,14 @@ SFAB_ISRM_demo_ems_data %>%
   write_csv(
     build_path("Demo", "SFAB_ISRM_demo_ems_data-pol_x_src.csv"))
 
-# write_data(SFAB_ISRM_demo_2020_exp_data)
+SFAB_ISRM_demo_conc_data %>%
+  drop_units() %>%
+  sum_concentration_by(
+    pol_abbr,
+    all_of(ISRM_ID_VAR)) %>%
+  spread(
+    pol_abbr, conc_qty) %>%
+  left_join(
+    ISRM_SFAB_cell_geometries,
+    .,
+    by = ISRM_ID_VAR)
