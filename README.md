@@ -9,6 +9,8 @@ InMAP analyses scoped to SF air basin.
 
 ## Notable Files and Folders
 
+As of 2022-04-21:
+
 - "Demo" inputs (from the UW team) and outputs are in [Data/Demo/] and [Build/Demo/], respectively.
 - R utility functions, written by @dholstius, are in [R/].
 - A series of scripts to "make" stuff is in [Make/].
