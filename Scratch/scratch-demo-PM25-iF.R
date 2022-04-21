@@ -1,3 +1,5 @@
+source(here::here("Make", "100-setup.R"))
+
 require_data(SFAB_tract_2020_raceeth_data)
 require_data(SFAB_ISRM_demo_ems_data)
 require_data(SFAB_ISRM_demo_conc_data)
