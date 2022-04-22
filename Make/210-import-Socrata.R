@@ -1,6 +1,5 @@
 require_data(CMAQ_CRS)
 require_data(SFAB_boundary)
-require_data(SFBA_OSM_coast)
 
 SFAB_tract_2020_geodata <- local({
 
