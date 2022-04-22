@@ -1,0 +1,20 @@
+Variable definitions for 'marginal_values.csv'
+
+'cell_ID': Grid cell identifier
+'Populaiton': Grid cell population
+'Mortality_rate': Grid cell all cause mortality rate per 100,000 population
+'Location_N': North-direction location of grid cell (see InMAP projection file: 'InMAP_shape_prj.txt')
+'Location_S': South-direction location of grid cell
+'Location_E': East-direction location of grid cell
+'Location_W': West-direction location of grid cell
+'Centroid_lat': Grid cell centroid latitude
+'Centroid_long': Grid cell centroid longitude
+'MD_"X"_ground': Marginal damages of ground-level emissions from grid cell by pollutant "X" ($/tonne in 2011 US Dollars) for pollutants X = {VOC, PM2.5, NH3, SO2, NOx}.
+'MD_"X"_low': Marginal damages of low-stack emissions from grid cell by pollutant "X" ($/tonne in 2011 US dollars)
+'MD_"X"_high': Marginal damages of high-stack emissions from grid cell by pollutant "X" ($/tonne in 2011 US dollars)
+'MM_"X"_ground': Marginal change in mortality from ground-level emissions from grid cell by pollutant "X" (deaths/tonne)
+'MM_"X"_low': Marginal change in mortality from low-stack emissions from grid cell by pollutant "X" (deaths/tonne)
+'MM_"X"_high': Marginal change in mortality from high-stack emissions from grid cell by pollutant "X" (deaths/tonne)
+'Con_pop_"X"_ground': Change in population exposure to PM2.5 from ground-level emissions from grid cell by pollutant "X" (population*µgm^(-3)/tonne)
+'Con_pop_"X"_low': Change in population exposure to PM2.5 from low-stack emissions from grid cell by pollutant "X" (population*µgm^(-3)/tonne)
+'Con_pop_"X"_high': Change in population exposure to PM2.5 from high-stack emissions from grid cell by pollutant "X" (population*µgm^(-3)/tonne)
