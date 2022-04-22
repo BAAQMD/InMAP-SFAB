@@ -1,3 +1,5 @@
+source(here::here("Make", "100-setup.R"))
+
 require_data(SFAB_tract_2020_raceeth_data)
 require_data(SFAB_ISRM_demo_ems_data)
 require_data(SFAB_ISRM_demo_conc_data)
@@ -106,6 +108,7 @@ show(NGC_PM25_iF / demo_PM25_iF)
 #'----------------------------------------------------------------------
 #'
 #' Put numbers together in a nice table.
+#' This table is featured in Issue #1 on GH.
 #'
 #'----------------------------------------------------------------------
 
