@@ -7,6 +7,8 @@
 #'
 #'----------------------------------------------------------------------
 
+require_data(ISRM_US_SFAB_cell_geodata)
+
 #
 # Not true --- why? Is "Other/Multi" omitted?
 #
