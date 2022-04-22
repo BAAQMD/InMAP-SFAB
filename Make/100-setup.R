@@ -40,7 +40,6 @@ ISRM_CRS <-
 ISRM_US_CELL_COUNT <- 52411
 ISRM_US_NC_URL <- "https://zenodo.org/record/2589760/files/isrm_v1.2.1.zip?download=1"
 ISRM_US_NC_PATH <- here::here("Data", "Zenodo", "isrm_v1.2.1.ncf")
-
 ISRM_US_CA_CELL_COUNT <- 9001
 
 # Cell geometry definitions for the full ISRM (minimum cell size ≈ 1 km^2)
