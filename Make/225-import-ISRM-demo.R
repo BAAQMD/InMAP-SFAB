@@ -338,3 +338,4 @@ SFAB_ISRM_demo_conc_data %>%
     ISRM_US_SFAB_cell_geometries,
     .,
     by = ISRM_ID_VAR)
+
