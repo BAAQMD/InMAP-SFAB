@@ -33,6 +33,29 @@ These were mirrored from the internal BAAQMD/MTC Socrata portal on 2022-01-22.
 The shapefile contains hard-to-recognize Census variables like `P0020005`.
 The logic that translates and combines these into abbreviations of more familiar names for racial/ethnic categories, like `AsnPI` (Asian/Pacific Islander), is in the [exptools] R package.
 
+## Key Geometries
+
+```geojson
+{
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-123.03113, 36.8206],
+            [-123.058571, 37.508407],
+            [-123.086613, 38.197317],
+            [-123.115276, 38.887246],
+            [-122.140846, 38.907406],
+            [-121.165928, 38.918334],
+            [-121.158625, 38.228021],
+            [-121.15148, 37.538731],
+            [-121.144488, 36.850549],
+            [-122.08803, 36.840022],
+            [-123.03113, 36.8206]
+          ]
+        ]
+      }
+```
+
 [Build/]: https://github.com/BAAQMD/ISRM-SFAB/blob/master/Build/
 [References/Handoff/]: https://github.com/BAAQMD/ISRM-SFAB/blob/master/References/Handoff
 [Zenodo]: https://zenodo.org/record/2589760#.YgREvS2ZPEa
