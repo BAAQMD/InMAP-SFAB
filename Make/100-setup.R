@@ -44,7 +44,7 @@ ISRM_US_NC_PATH <- here::here("Data", "Zenodo", "isrm_v1.2.1.ncf")
 ISRM_US_CA_CELL_COUNT <- 9001
 
 # Cell geometry definitions for the full ISRM (minimum cell size ≈ 1 km^2)
-ISRM_US_LATLON_CSV_PATH <- here::here("Data", "ISRM", "isrm_boundaries_latlons.csv")
+ISRM_US_LATLON_CSV_PATH <- here::here("Data", "UW", "2022-02-10", "isrm_boundaries_latlons.csv")
 
 # The California "hi-res" prototype,
 # via https://drive.google.com/drive/folders/1WmLRz7iWo2MjtSikgHEig7M0NvK2sOns
