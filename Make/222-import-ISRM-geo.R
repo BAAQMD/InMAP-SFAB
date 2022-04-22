@@ -27,29 +27,29 @@ ISRM_CA_cell_lookup <-
     skip = 1) %>%
   tidy_InMAP_names() %>%
   ensurer::ensure(
-    nrow(.) == ISRM_CA_CELL_COUNT)
+    nrow(.) == ISRM_US_CA_CELL_COUNT) # n = 9,001 CA cells in the full US ISRM
 
 #'----------------------------------------------------------------------
 #'
-#' Create `ISRM_cell_geometries`. This corresponds to the entire domain
+#' Create `ISRM_US_cell_geometries`. This corresponds to the entire domain
 #' (n = 52,411 cells) --- not just California or Bay Area.
 #'
 #'----------------------------------------------------------------------
 
-ISRM_full_cell_geometries <- local({
+ISRM_US_cell_geometries <- local({
 
   msg(
-    "constructing `ISRM_full_cell_geometries` from ",
-    fs::path_rel(ISRM_FULL_LATLON_CSV_PATH, here::here()))
+    "constructing `ISRM_US_cell_geometries` from ",
+    fs::path_rel(ISRM_US_LATLON_CSV_PATH, here::here()))
 
   full_csv_latlon_data <-
     read_csv(
-      ISRM_FULL_LATLON_CSV_PATH,
+      ISRM_US_LATLON_CSV_PATH,
       col_types = cols(
         isrm = col_integer(),
         .default = col_double())) %>%
     ensurer::ensure(
-      nrow(.) == ISRM_FULL_CELL_COUNT) %>%
+      nrow(.) == ISRM_US_CELL_COUNT) %>%
     tidy_InMAP_names()
 
   # To create a 2-column XY matrix
@@ -92,16 +92,16 @@ ISRM_full_cell_geometries <- local({
 
 #'----------------------------------------------------------------------
 #'
-#' Filter `ISRM_full_cell_geometries`,
+#' Filter `ISRM_US_cell_geometries`,
 #' using the envelope of `CMAQ_raster_template`,
 #' yielding `ISRM_SFAB_cell_geodata` (n = 2,553 cells).
 #'
 #'----------------------------------------------------------------------
 
-msg("filtering `ISRM_full_cell_geometries` using `CMAQ_envelope`")
+msg("filtering `ISRM_US_cell_geometries` using `CMAQ_envelope`")
 
 ISRM_SFAB_cell_geometries <-
-  ISRM_full_cell_geometries %>%
+  ISRM_US_cell_geometries %>%
   st_filter(
     st_transform(
       CMAQ_envelope, st_crs(.)))
@@ -114,7 +114,7 @@ ISRM_SFAB_cell_geometries <-
 
 write_data(ISRM_CA_cell_lookup)
 write_data(ISRM_SFAB_cell_geometries)
-write_data(ISRM_full_cell_geometries)
+write_data(ISRM_US_cell_geometries)
 
 write_geojson(
   as(ISRM_SFAB_cell_geometries, "Spatial"),

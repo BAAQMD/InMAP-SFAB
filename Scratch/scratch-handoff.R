@@ -39,7 +39,7 @@ leaflet_map_SFBA() %>%
 #'
 #'----------------------------------------------------------------------
 
-ISRM_FULL_NC_PATH %>%
+ISRM_US_NC_PATH %>%
   ncmeta::nc_atts() %>%
   mutate(value = unlist(value)) %>%
   select(variable, name, value) %>%
@@ -66,7 +66,7 @@ local({
 
   ISRM_full_ncdf4_obj <-
     ncdf4::nc_open(
-      ISRM_FULL_NC_PATH)
+      ISRM_US_NC_PATH)
 
   i <- 1201; j <- 1202; k <- 0; v <- "pNH4"
   s <- paste0("S", i+1); r <- paste0("R", j+1); l <- paste0("L", k+1)
@@ -174,8 +174,8 @@ ggplot() +
   labs(
     title = "Baseline TotalPM25",
     subtitle = str_glue(
-      "Basis: {basename(ISRM_FULL_NC_PATH)} ",
-      "and {basename(ISRM_FULL_LATLON_CSV_PATH)}"),
+      "Basis: {basename(ISRM_US_NC_PATH)} ",
+      "and {basename(ISRM_US_LATLON_CSV_PATH)}"),
     caption = str_glue("DRAFT {str_date()}"))
 
 #'----------------------------------------------------------------------

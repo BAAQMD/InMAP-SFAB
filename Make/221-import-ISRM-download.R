@@ -41,11 +41,11 @@
 #'
 #'----------------------------------------------------------------------
 
-if (isFALSE(fs::file_exists(ISRM_FULL_NC_PATH))) {
+if (isFALSE(fs::file_exists(ISRM_US_NC_PATH))) {
 
   message(
     "[210-data-download] ",
-    fs::path_rel(ISRM_FULL_NC_PATH, here::here()),
+    fs::path_rel(ISRM_US_NC_PATH, here::here()),
     " does not yet exist; downloading now")
 
   nc_zip_path <-
@@ -53,7 +53,7 @@ if (isFALSE(fs::file_exists(ISRM_FULL_NC_PATH))) {
 
   response <-
     httr::GET(
-      ISRM_FULL_NC_URL,
+      ISRM_US_NC_URL,
       httr::write_disk(nc_zip_path),
       httr::progress())
 

@@ -16,7 +16,7 @@ ISRM_SFAB_array <- local({
 
   ISRM_full_ncdf4_obj <-
     ncdf4::nc_open(
-      ISRM_FULL_NC_PATH)
+      ISRM_US_NC_PATH)
 
   varids <- c(
     "PrimaryPM25",
@@ -70,7 +70,7 @@ ISRM_full_cell_geodata <- local({
 
   ISRM_full_tidync_obj <-
     tidync::tidync(
-      ISRM_FULL_NC_PATH)
+      ISRM_US_NC_PATH)
 
   ISRM_full_baseline_data <-
     ISRM_full_tidync_obj %>%
@@ -79,7 +79,7 @@ ISRM_full_cell_geodata <- local({
     filter(
       Layer == 0) %>%
     ensurer::ensure(
-      nrow(.) == ISRM_FULL_CELL_COUNT,
+      nrow(.) == ISRM_US_CELL_COUNT,
       all(.$allcells == 1:nrow(.))) %>%
     mutate(
       !!ISRM_ID_VAR := allcells - 1L) # **NOTE**: `isrm` starts at 0; `allcells` starts at 1
@@ -87,7 +87,7 @@ ISRM_full_cell_geodata <- local({
   rm(ISRM_full_tidync_obj)
 
   powerjoin::power_left_join(
-    ISRM_full_cell_geometries,
+    ISRM_US_cell_geometries,
     ISRM_full_baseline_data,
     check = powerjoin::check_specs(
       column_conflict = "abort",
