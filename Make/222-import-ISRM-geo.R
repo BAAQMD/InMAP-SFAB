@@ -73,12 +73,13 @@ ISRM_US_cell_geometries <- local({
         coords,
         ~ sf::st_polygon(list(.))))
 
-  msg("reprojecting ", format_count(nrow(full_geom_data)), " features to CRS ", ISRM_CRS)
+  msg("reprojecting ", format_count(nrow(full_geom_data)),
+      " features to EPSG 4326")
 
   # Convert to `sf` object using `st_as_sf()`.
   full_geom_data %>%
     mutate(
-      geometry = st_sfc(poly, crs = ISRM_CRS)) %>%
+      geometry = st_sfc(poly, crs = 4326)) %>%
     select(
       all_of(ISRM_ID_VAR),
       geometry) %>%
@@ -89,6 +90,9 @@ ISRM_US_cell_geometries <- local({
       geometry)
 
 })
+
+comment(ISRM_US_cell_geometries) <-
+  fs::path_rel(ISRM_US_LATLON_CSV_PATH, here::here())
 
 #'----------------------------------------------------------------------
 #'
@@ -104,7 +108,9 @@ ISRM_US_SFAB_cell_geometries <-
   ISRM_US_cell_geometries %>%
   st_filter(
     st_transform(
-      CMAQ_envelope, st_crs(.)))
+      CMAQ_envelope, st_crs(.))) %>%
+  ensurer::ensure(
+    nrow(.) == 2547)
 
 #'----------------------------------------------------------------------
 #'
@@ -117,6 +123,9 @@ write_data(ISRM_US_SFAB_cell_geometries)
 write_data(ISRM_US_cell_geometries)
 
 write_geojson(
-  as(ISRM_US_SFAB_cell_geometries, "Spatial"),
-  dsn = build_path("Geodata"),
-  layer = "ISRM_US_SFAB_cell_geometries")
+  ISRM_US_SFAB_cell_geometries,
+  build_path("Geodata", "ISRM_US_SFAB_cell_geometries.geojson"))
+
+write_geojson(
+  CMAQ_envelope,
+  build_path("Geodata", "BAAQMD_CMAQ_envelope.geojson"))
