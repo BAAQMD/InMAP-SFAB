@@ -72,6 +72,12 @@ ISRM_CA_SFAB_cube <-
 #'
 #'----------------------------------------------------------------------
 
+ISRM_US_CA_cell_geometries <-
+  ISRM_US_cell_geometries %>%
+  semi_join(
+    ISRM_CA_cell_lookup,
+    by = "ISRM_id")
+
 ISRM_CA_cell_geodata <- local({
 
   ISRM_CA_tidync_obj <-
@@ -93,7 +99,7 @@ ISRM_CA_cell_geodata <- local({
   rm(ISRM_CA_tidync_obj)
 
   powerjoin::power_left_join(
-    ISRM_CA_cell_geometries,
+    ISRM_US_CA_cell_geometries,
     ISRM_CA_baseline_data,
     check = powerjoin::check_specs(
       column_conflict = "abort",
@@ -104,8 +110,8 @@ ISRM_CA_cell_geodata <- local({
 
 })
 
-ISRM_US_SFAB_cell_geodata <-
-  ISRM_full_cell_geodata %>%
+ISRM_CA_SFAB_cell_geodata <-
+  ISRM_CA_cell_geodata %>%
   filter(across(
     c(ISRM_ID_VAR),
     ~ . %in% ISRM_US_SFAB_cell_ids))
