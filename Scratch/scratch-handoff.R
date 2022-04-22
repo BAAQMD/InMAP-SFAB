@@ -11,7 +11,7 @@
 # Not true --- why? Is "Other/Multi" omitted?
 #
 with(
-  ISRM_SFAB_cell_geodata,
+  ISRM_US_SFAB_cell_geodata,
   testthat::expect_equal(
     sum(TotalPop),
     sum(Asian + Black + Latino + Native + WhiteNoLat)))
@@ -25,8 +25,8 @@ with(
 
 leaflet_map_SFBA() %>%
   addPolygons(
-    data = ISRM_SFAB_cell_geodata,
-    popup = leafpop::popupTable(ISRM_SFAB_cell_geodata, zcol = c(ISRM_ID_VAR, "cell_km2")),
+    data = ISRM_US_SFAB_cell_geodata,
+    popup = leafpop::popupTable(ISRM_US_SFAB_cell_geodata, zcol = c(ISRM_ID_VAR, "cell_km2")),
     color = "black",
     weight = 0.5, fillColor = "white", fillOpacity = 0.1) %>%
   addPolygons(
@@ -90,13 +90,13 @@ local({
     tol = tol)
 
   testthat::expect_equal(
-    ISRM_SFAB_array[s, r, l, v] %>%
+    ISRM_US_SFAB_array[s, r, l, v] %>%
       { as.numeric(.) * 2 },
     expected,
     tol = tol)
 
   testthat::expect_equal(
-    ISRM_SFAB_cube %>%
+    ISRM_US_SFAB_cube %>%
       filter(
         source   == s,
         receptor == r,
@@ -128,13 +128,13 @@ color_for_pop_km2 <- function (x, palette = "viridis") {
 
 lltools::leaflet_map_SFBA() %>%
   addGlPolygonOverlay(
-    ISRM_SFAB_cell_geodata,
+    ISRM_US_SFAB_cell_geodata,
     stroke = "black",
     smoothFactor = 0,
     weight = 0.1,
     fillOpacity = 0.7,
     fillColor = color_for_pop_km2(
-      with(ISRM_SFAB_cell_geodata, TotalPop / cell_km2))) %>%
+      with(ISRM_US_SFAB_cell_geodata, TotalPop / cell_km2))) %>%
   addPolylines(
     data = CMAQ_envelope %>% st_transform(4326),
     weight = 2,
@@ -162,7 +162,7 @@ ggplot() +
     limits = c(0, 15)) +
   geom_sf(
     color = alpha("white", 0.5), size = 0.1,
-    data = ISRM_SFAB_cell_geodata) +
+    data = ISRM_US_SFAB_cell_geodata) +
   geom_sf(
     color = "white", fill = NA,
     data = CMAQ_envelope) +
@@ -182,16 +182,16 @@ ggplot() +
 #'
 #' Export copies of the following to `Build/Geodata/`:
 #'
-#' - `ISRM_SFAB_cell_geodata` (as GeoJSON)
+#' - `ISRM_US_SFAB_cell_geodata` (as GeoJSON)
 #' - `CMAQ_raster_template` (as GeoTIFF)
 #' - `CMAQ_envelope` (as GeoJSON)
 #'
 #'----------------------------------------------------------------------
 
 # geotools::write_geojson(
-#   as(ISRM_SFAB_cell_geodata, "Spatial"),
+#   as(ISRM_US_SFAB_cell_geodata, "Spatial"),
 #   dsn = build_path("Geodata"),
-#   layer = "ISRM_SFAB_cell_geodata")
+#   layer = "ISRM_US_SFAB_cell_geodata")
 
 geotools::write_geojson(
   as(st_as_sf(CMAQ_envelope) %>% mutate(FID = 1), "Spatial"),

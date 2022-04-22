@@ -15,7 +15,7 @@ SFAB_ISRM_demo_ems_data %>%
   sum_emissions_by(
     ISRM_id, pol_abbr) %>%
   inner_join(
-    ISRM_SFAB_cell_geometries, .,
+    ISRM_US_SFAB_cell_geometries, .,
     by = ISRM_ID_VAR) %>%
   mutate(
     ems_km2 = ems_qty / st_km2(.)) %>%

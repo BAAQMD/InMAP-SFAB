@@ -8,8 +8,8 @@
 #'
 #'----------------------------------------------------------------------
 
-ISRM_SFAB_cell_ids <-
-  ISRM_SFAB_cell_geometries %>%
+ISRM_US_SFAB_cell_ids <-
+  ISRM_US_SFAB_cell_geometries %>%
   pull(all_of(ISRM_ID_VAR))
 
 ISRM_CA_SFAB_array <- local({
@@ -28,7 +28,7 @@ ISRM_CA_SFAB_array <- local({
   extract_L0_varid <- function (varid) {
     extract_ISRM_array(
       ISRM_CA_ncdf4_obj,
-      ISRM_SFAB_cell_ids,
+      ISRM_US_SFAB_cell_ids,
       varid = varid,
       layer = 1)
   }
@@ -68,7 +68,7 @@ ISRM_CA_SFAB_cube <-
 #' - `ISRM_CA_cell_geodata`; and
 #' - `ISRM_CA_SFAB_cell_geodata`
 #'     - A subset of `ISRM_full_cell_geodata`
-#'         - Where `ISRM_id` is in `ISRM_SFAB_cell_ids`
+#'         - Where `ISRM_id` is in `ISRM_US_SFAB_cell_ids`
 #'
 #'----------------------------------------------------------------------
 
@@ -104,8 +104,8 @@ ISRM_CA_cell_geodata <- local({
 
 })
 
-ISRM_SFAB_cell_geodata <-
+ISRM_US_SFAB_cell_geodata <-
   ISRM_full_cell_geodata %>%
   filter(across(
     c(ISRM_ID_VAR),
-    ~ . %in% ISRM_SFAB_cell_ids))
+    ~ . %in% ISRM_US_SFAB_cell_ids))

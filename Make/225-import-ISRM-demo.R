@@ -1,4 +1,4 @@
-require_data(ISRM_SFAB_cell_geometries)
+require_data(ISRM_US_SFAB_cell_geometries)
 require_data(SFAB_tract_2020_geodata)
 
 #'----------------------------------------------------------------------
@@ -91,7 +91,7 @@ SFAB_ISRM_demo_data <- local({
 #'   own restriction(s) on what counts as an "SFAB" cell, which could be
 #'   relaxed.
 #'
-#' - The 400+ cells present in the LHS (`ISRM_SFAB_cell_geometries`), but
+#' - The 400+ cells present in the LHS (`ISRM_US_SFAB_cell_geometries`), but
 #'   not in the RHS (demo CSV data), should probably be supplied by UW.
 #'
 #'----------------------------------------------------------------------
@@ -103,7 +103,7 @@ SFAB_ISRM_demo_conc_geodata <-
     any_of(ISRM_SRC_VARS),
     any_of(ISRM_CONC_VARS)) %>%
   powerjoin::power_right_join(
-    ISRM_SFAB_cell_geometries,
+    ISRM_US_SFAB_cell_geometries,
     .,
     by = ISRM_ID_VAR,
     check = powerjoin::check_specs(
@@ -134,7 +134,7 @@ SFAB_ISRM_demo_conc_data <-
 #'----------------------------------------------------------------------
 
 SFAB_ISRM_pop_2020_geodata <-
-  ISRM_SFAB_cell_geometries %>%
+  ISRM_US_SFAB_cell_geometries %>%
   select(
     all_of(ISRM_ID_VAR)) %>%
   with_interpolated_population(
@@ -182,7 +182,7 @@ SFAB_ISRM_demo_ems_data <- local({
   filtered_data <-
     tidied_data %>%
     semi_join(
-      ISRM_SFAB_cell_geometries,
+      ISRM_US_SFAB_cell_geometries,
       by = ISRM_ID_VAR)
 
   unit_aware_data <-
@@ -335,6 +335,6 @@ SFAB_ISRM_demo_conc_data %>%
   spread(
     pol_abbr, conc_qty) %>%
   left_join(
-    ISRM_SFAB_cell_geometries,
+    ISRM_US_SFAB_cell_geometries,
     .,
     by = ISRM_ID_VAR)

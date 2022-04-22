@@ -94,13 +94,13 @@ ISRM_US_cell_geometries <- local({
 #'
 #' Filter `ISRM_US_cell_geometries`,
 #' using the envelope of `CMAQ_raster_template`,
-#' yielding `ISRM_SFAB_cell_geodata` (n = 2,553 cells).
+#' yielding `ISRM_US_SFAB_cell_geodata` (n = 2,553 cells).
 #'
 #'----------------------------------------------------------------------
 
 msg("filtering `ISRM_US_cell_geometries` using `CMAQ_envelope`")
 
-ISRM_SFAB_cell_geometries <-
+ISRM_US_SFAB_cell_geometries <-
   ISRM_US_cell_geometries %>%
   st_filter(
     st_transform(
@@ -113,10 +113,10 @@ ISRM_SFAB_cell_geometries <-
 #'----------------------------------------------------------------------
 
 write_data(ISRM_CA_cell_lookup)
-write_data(ISRM_SFAB_cell_geometries)
+write_data(ISRM_US_SFAB_cell_geometries)
 write_data(ISRM_US_cell_geometries)
 
 write_geojson(
-  as(ISRM_SFAB_cell_geometries, "Spatial"),
+  as(ISRM_US_SFAB_cell_geometries, "Spatial"),
   dsn = build_path("Geodata"),
-  layer = "ISRM_SFAB_cell_geometries")
+  layer = "ISRM_US_SFAB_cell_geometries")
