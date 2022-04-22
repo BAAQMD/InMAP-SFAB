@@ -31,7 +31,10 @@ ISRM_EMS_VARS  <- c("PM25", "NOx", "SOx", "VOC", "NH3")
 ISRM_CONC_VARS <- c("PM25_TOT", "PM25_PRI", "SOA", "pNH4", "pNO3", "pSO4")
 ISRM_POP_VARS  <- c("Total", "White", "Black", "NatAm", "Asian", "PcIsl", "Other", "Multi", "Hispanic")
 
-ISRM_CRS <- WGS84_GPS # FIXME: assumption!
+ISRM_CRS <-
+  data_path("Zenodo", "marginal_values", "InMAP_shape_prj.txt") %>%
+  xfun::read_all() %>%
+  st_crs()
 
 # The full ISRM (about 166 GB on disk)
 ISRM_US_CELL_COUNT <- 52411
