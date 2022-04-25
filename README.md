@@ -20,7 +20,7 @@ As of 2022-04-25:
 
 ```mermaid
   graph TD;
-      R-->Make;
+      *.R-->Make;
       Data-->Build;
       Make-->Build;
       Build-->Scratch;
