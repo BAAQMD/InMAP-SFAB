@@ -11,11 +11,11 @@
 
 As of 2022-04-25:
 
-- "Demo" inputs (from the UW team) and outputs are in [Data/UW/] and [Build/Demo/], respectively.
 - A series of R scripts to "make" intermediate datasets is in [Make/]. These write to subdirectories of [Build/]. 
 - R utility functions, written by @dholstius, are in [R/]. These are employed by scripts in [Make/].
 - Scripts in [Scratch/] look for stuff in [Build/], and summarize it in human-friendly ways.
 - GIS definitions are exported to [Build/Geodata/].
+- "Demo" inputs (from the UW team) and outputs are in [Data/UW/] and [Build/Demo/], respectively.
 - Hardened scratch-work will most likely be promoted to `Analyses/` or `Report/`.
 
 ```mermaid
