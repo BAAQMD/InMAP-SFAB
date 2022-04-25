@@ -1,6 +1,6 @@
 # InMAP-SFAB
 
-InMAP analyses scoped to SF air basin.
+InMAP analyses scoped to San Francisco air basin ("SFAB").
 
 ## Project / Task Management
 
