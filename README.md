@@ -9,7 +9,7 @@ InMAP analyses scoped to SF air basin.
 
 ## Notable Files and Folders
 
-As of 2022-04-21:
+As of 2022-04-25:
 
 - "Demo" inputs (from the UW team) and outputs are in [Data/UW/] and [Build/Demo/], respectively.
 - GIS definitions are exported to [Build/Geodata/].
