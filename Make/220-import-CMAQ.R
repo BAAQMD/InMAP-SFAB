@@ -34,3 +34,11 @@ local({
     topojson_path)
 
 })
+
+local({
+
+  xfun::write_utf8(
+    as.character(st_crs(CMAQ_LCC_1km_grid_shp))[2],
+    build_path("Geodata", "CMAQ_LCC_1km_grid.prj"))
+
+})
