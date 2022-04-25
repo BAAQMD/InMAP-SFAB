@@ -31,6 +31,7 @@ As of 2022-04-25:
 [Data/UW/]: ../../tree/master/Data/UW
 [Build/]: ../../tree/master/Build
 [Build/Geodata/]: ../../tree/master/Build/Geodata
+[Build/Demo/]: ../../tree/master/Build/Demo
 [R/]: ../../tree/master/R
 [Make/]: ../../tree/master/Make
 [Scratch/]: ../../tree/master/Scratch
