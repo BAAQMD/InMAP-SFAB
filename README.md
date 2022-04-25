@@ -20,10 +20,10 @@ As of 2022-04-25:
 
 ```mermaid
   graph TD;
-      *.R-->Make;
-      Data-->Build;
-      Make-->Build;
-      Build-->Scratch;
+      *.R-->Make/;
+      Data/-->Build/;
+      Make/-->Build/;
+      Build/-->Scratch/;
 ```
 
 [issues]: https://github.com/BAAQMD/InMAP-SFAB/issues
