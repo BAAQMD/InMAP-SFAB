@@ -12,6 +12,7 @@ InMAP analyses scoped to SF air basin.
 As of 2022-04-21:
 
 - "Demo" inputs (from the UW team) and outputs are in [Data/UW/] and [Build/Demo/], respectively.
+- GIS definitions are exported to [Build/Geodata/].
 - R utility functions, written by @dholstius, are in [R/].
 - A series of R scripts to "make" intermediate datasets is in [Make/].
     - Stuff is written to `Build/RData/` in R format.
@@ -21,5 +22,6 @@ As of 2022-04-21:
 [project]: https://github.com/orgs/BAAQMD/projects/7/views/4
 [Data/UW/]: ../../tree/master/Data/UW
 [Build/Demo/]: ../../tree/master/Build/Demo
+[Build/Geodata/]: ../../tree/master/Build/Geodata
 [R/]: ../../tree/master/R
 [Make/]: ../../tree/master/Make
