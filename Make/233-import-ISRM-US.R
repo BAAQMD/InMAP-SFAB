@@ -225,7 +225,3 @@ write_data(ISRM_US_SFAB_cell_geodata)
 write_geojson(
   ISRM_US_SFAB_cell_geometries,
   build_path("Geodata", "ISRM_US_SFAB_cell_geometries.geojson"))
-
-write_geojson(
-  CMAQ_LCC_envelope,
-  build_path("Geodata", "BAAQMD_CMAQ_LCC_envelope.geojson"))
