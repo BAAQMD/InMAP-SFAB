@@ -105,5 +105,4 @@ library(patchwork)
 ggtools::write_png(
   (fig1_object + fig2_object),
   build_path("Demo", "scratch-demo-CA-PM25-map.png"),
-  width = 12,
   height = 12)
