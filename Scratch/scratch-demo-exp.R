@@ -3,7 +3,7 @@ require_data(SFAB_ISRM_pop_2020_data)
 
 #'----------------------------------------------------------------------
 #'
-#' Quick map of `PM25_TOT`.
+#' Quick map of `TotalPM25`.
 #'
 #'----------------------------------------------------------------------
 
@@ -74,18 +74,18 @@ mapview_ISRM_concentrations <- function (
 
 }
 
-demo_map_PM25_PRI <-
+demo_map_PrimaryPM25 <-
   SFAB_ISRM_demo_conc_data %>%
   mapview_ISRM_concentrations(
-    pollutant = "PM25_PRI")
+    pollutant = "PrimaryPM25")
 
-show(demo_map_PM25_PRI)
+show(demo_map_PrimaryPM25)
 
 write_leaflet(
-  demo_map_PM25_PRI,
+  demo_map_PrimaryPM25,
   build_path(
     "Demo",
-    "SFAB_ISRM_demo_conc_data-PM25_PRI.html"))
+    "SFAB_ISRM_demo_conc_data-PrimaryPM25.html"))
 
 #'----------------------------------------------------------------------
 #'
@@ -150,7 +150,7 @@ SFAB_ISRM_pop_2020_data %>%
     columns = c("pol_abbr", "pop_h1"),
     values = "exp/pop",
     inclusions = list(
-      pol_abbr = list("PM25_TOT")))
+      pol_abbr = list("TotalPM25")))
 
 #'----------------------------------------------------------------------
 #'

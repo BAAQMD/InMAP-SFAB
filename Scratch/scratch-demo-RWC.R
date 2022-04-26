@@ -118,14 +118,14 @@ SFAB_ISRM_demo_ems_data %>%
   arrange(
     desc(PM25))
 
-#' TODO: compare PM25_PRI (a) emissions (regional sum) & (b) avg regional exposures (compare ratio a/b for both demo and )
+#' TODO: compare PrimaryPM25 (a) emissions (regional sum) & (b) avg regional exposures (compare ratio a/b for both demo and )
 
 #'----------------------------------------------------------------------
 #'
 #' Summary of (ISRM x Census 2020) RWC exposures.
 #'
-#' - `exp/pop` for `PM25_TOT` due to RWC ≈ +0.306 ug/m3
-#' - 97% of that is `PM25_PRI`
+#' - `exp/pop` for `TotalPM25` due to RWC ≈ +0.306 ug/m3
+#' - 97% of that is `PrimaryPM25`
 #'
 #' See `Scratch/scratch-demo-exp.R` for a similar tabulation of
 #' exposures for all demo sectors (not just RWC).

@@ -9,14 +9,14 @@ require_data(ISRM_ID_VARS)
 
 #'
 #' In the support work for the NG appliances rulemaking, the regional average
-#' population-weighted concentration of primary PM2.5 (`PM25_PRI`) was
+#' population-weighted concentration of primary PM2.5 (`PrimaryPM25`) was
 #' found to be 4.40 ug/m^3.
 #'
 #' That from a total SFAB emissions of 12,396 ton/yr PM2.5, obtained there via:
 #'
 #'   CMAQ_ems_stobj[SFAB_boundary] %>%
 #'     filter(scenario == "Baseline") %>%
-#'     pull_total(PM25_PRI)
+#'     pull_total(PrimaryPM25)
 #'
 #' Assuming a breathing rate of 14.5 m^3/d, this works out to
 #' an intake fraction (iF) of **2.07 ppt**.
@@ -60,7 +60,7 @@ demo_PM25_ems_qty <-
     pol_abbr == "PM25") %>%
   semi_join(
     US_ISRM_SFAB_cell_geometries,
-    by = any_of(ISRM_ID_VARS)) %>%
+    by = intersect(names(.), ISRM_ID_VARS)) %>%
   mutate(
     ems_qty = set_units(ems_qty, unique(ems_unit), mode = "character")) %>%
   pull(ems_qty) %>%
@@ -74,17 +74,17 @@ demo_PM25_ems_qty <-
     demo_PM25_ems_qty,
     "t/d")
 
-demo_PM25_PRI_conc_qty <-
+demo_PrimaryPM25_conc_qty <-
   SFAB_ISRM_pop_2020_data %>%
   summarise_exposure_to(
     filter(
       SFAB_ISRM_demo_conc_data,
-      pol_abbr == "PM25_PRI"),
+      pol_abbr == "PrimaryPM25"),
     by = pol_abbr) %>%
   pull(`exp/pop`)
 
 testthat::expect_equal(
-  demo_PM25_PRI_conc_qty, 1.428, tol = 1e-3)
+  demo_PrimaryPM25_conc_qty, 1.428, tol = 1e-3)
 
 demo_pop_qty <-
   pull_total(SFAB_ISRM_pop_2020_data, pop_qty) %>%
@@ -93,7 +93,7 @@ demo_pop_qty <-
 demo_PM25_iF <-
   intake_fraction(
     pop_qty = demo_pop_qty,
-    conc_qty = demo_PM25_PRI_conc_qty,
+    conc_qty = demo_PrimaryPM25_conc_qty,
     ems_qty = demo_PM25_ems_qty,
     breathing_rate = breathing_rate)
 
@@ -107,6 +107,16 @@ show(NGC_PM25_iF / demo_PM25_iF)
 
 #'----------------------------------------------------------------------
 #'
+#' Now let's work with `ca_isrm.nc` data.
+#'
+#'----------------------------------------------------------------------
+
+CA_ISRM_pop_qty <-
+  with(CA_ISRM_SFAB_cell_geodata, sum(all))
+
+
+#'----------------------------------------------------------------------
+#'
 #' Put numbers together in a nice table.
 #' This table is featured in Issue #1 on GH.
 #'
@@ -116,8 +126,8 @@ table_data <- tribble(
   ~ variable, ~ basis, ~ value, ~ unit,
   "P",  "CMAQ",  drop_units(NGC_pop_qty), deparse_unit(NGC_pop_qty),
   "P",  "InMAP", drop_units(demo_pop_qty), deparse_unit(demo_pop_qty),
-  "C",  "CMAQ",  drop_units(NGC_PM5_PRI_conc_qty), deparse_unit(NGC_PM5_PRI_conc_qty),
-  "C",  "InMAP", drop_units(demo_PM25_PRI_conc_qty), deparse_unit(demo_PM25_PRI_conc_qty),
+  "C",  "CMAQ",  drop_units(NGC_PrimaryPM25_conc_qty), deparse_unit(NGC_PrimaryPM25_conc_qty),
+  "C",  "InMAP", drop_units(demo_PrimaryPM25_conc_qty), deparse_unit(demo_PrimaryPM25_conc_qty),
   "Q",  "CMAQ",  drop_units(breathing_rate), deparse_unit(breathing_rate),
   "Q",  "InMAP", drop_units(breathing_rate), deparse_unit(breathing_rate),
   "E",  "CMAQ",  drop_units(NGC_PM25_ems_qty), deparse_unit(NGC_PM25_ems_qty),

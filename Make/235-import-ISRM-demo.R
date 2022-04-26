@@ -31,7 +31,7 @@ SFAB_ISRM_demo_data <- local({
     st_km2()
 
   msg("renaming fields and setting units in `SFAB_ISRM_demo_data`")
-  msg("calculating Area = PM25_TOT / TotalPM_area")
+  msg("calculating Area = TotalPM25 / TotalPM_area")
 
   tidied_data <-
     csv_data %>%
@@ -69,7 +69,10 @@ SFAB_ISRM_demo_data <- local({
       set_units, "death/km^2")) %>%
     mutate(
       US_ISRM_id = as.integer(US_ISRM_id),
-      Area = PM25_TOT / TotalPM_area)
+      Area = TotalPM25 / TotalPM_area)
+
+  comment(unit_aware_data) <-
+    fs::path_rel(csv_path, here::here())
 
   SFAB_ISRM_demo_data <-
     unit_aware_data
@@ -116,6 +119,9 @@ SFAB_ISRM_demo_conc_geodata <-
   select_last(
     geometry)
 
+comment(SFAB_ISRM_demo_conc_geodata) <-
+  comment(SFAB_ISRM_demo_data)
+
 SFAB_ISRM_demo_conc_data <-
   SFAB_ISRM_demo_conc_geodata %>%
   st_drop_geometry() %>%
@@ -125,6 +131,9 @@ SFAB_ISRM_demo_conc_data <-
     values_to = "conc_qty") %>%
   mutate(
     pol_abbr = factor(pol_abbr, levels = ISRM_CONC_VARS))
+
+comment(SFAB_ISRM_demo_conc_data) <-
+  comment(SFAB_ISRM_demo_conc_geodata)
 
 #'----------------------------------------------------------------------
 #'
@@ -258,7 +267,7 @@ SFAB_ISRM_demo_nested_geodata <- local({
       -any_of(nest_vars)) %>%
     left_join(
       nested_conc_data,
-      by = any_of(ISRM_ID_VARS))
+      by = intersect(names(.), ISRM_ID_VARS))
 
   nested_pop_data <-
     SFAB_ISRM_pop_2020_data %>%
@@ -271,7 +280,7 @@ SFAB_ISRM_demo_nested_geodata <- local({
   nested_conc_geodata %>%
     powerjoin::power_left_join(
       nested_pop_data,
-      by = any_of(ISRM_ID_VARS),
+      by = intersect(names(.), ISRM_ID_VARS),
       check = powerjoin::check_specs(
         duplicate_keys_right = "abort",
         unmatched_keys_left = "warn")) %>%
@@ -314,9 +323,15 @@ write_data(SFAB_ISRM_pop_2020_geodata)
 write_data(SFAB_ISRM_pop_2020_data)
 write_data(SFAB_ISRM_demo_ems_data)
 
+#'----------------------------------------------------------------------
+#'
+#' Write summaries of emissions, as CSV, to disk.
+#'
+#'----------------------------------------------------------------------
+
 SFAB_ISRM_demo_ems_data %>%
   sum_emissions_by(
-    ISRM_id,
+    any_of(ISRM_ID_VARS),
     pol_abbr,
     signif = 6) %>%
   write_csv(
@@ -324,22 +339,9 @@ SFAB_ISRM_demo_ems_data %>%
 
 SFAB_ISRM_demo_ems_data %>%
   sum_emissions_by(
-    ISRM_id,
+    any_of(ISRM_ID_VARS),
     src_h1,
     pol_abbr,
     signif = 6) %>%
   write_csv(
     build_path("Demo", "SFAB_ISRM_demo_ems_data-pol_x_src.csv"))
-
-SFAB_ISRM_demo_conc_data %>%
-  drop_units() %>%
-  sum_concentration_by(
-    pol_abbr,
-    any_of(ISRM_ID_VARS)) %>%
-  spread(
-    pol_abbr, conc_qty) %>%
-  left_join(
-    US_ISRM_SFAB_cell_geometries,
-    .,
-    by = any_of(ISRM_ID_VARS))
-

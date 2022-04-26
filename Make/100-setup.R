@@ -32,7 +32,7 @@ rel_path <- function (...) {
 ISRM_ID_VARS   <- c("US_ISRM_id", "CA_ISRM_id")
 ISRM_SRC_VARS  <- c("src_h1", "SCC_id")
 ISRM_EMS_VARS  <- c("PM25", "NOx", "SOx", "VOC", "NH3")
-ISRM_CONC_VARS <- c("PM25_TOT", "PM25_PRI", "SOA", "pNH4", "pNO3", "pSO4")
+ISRM_CONC_VARS <- c("TotalPM25", "PrimaryPM25", "SOA", "pNH4", "pNO3", "pSO4")
 ISRM_POP_VARS  <- c("Total", "White", "Black", "NatAm", "Asian", "PcIsl", "Other", "Multi", "Hispanic")
 
 ISRM_CRS <-
