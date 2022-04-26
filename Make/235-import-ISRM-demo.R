@@ -67,7 +67,7 @@ SFAB_ISRM_demo_data <- local({
       c(DeathsK_White, DeathsK_Black, DeathsK_Asian, DeathsK_Hispanic),
       set_units, "death/km^2")) %>%
     mutate(
-      ISRM_id = as.integer(ISRM_id),
+      US_ISRM_id = as.integer(US_ISRM_id),
       Area = PM25_TOT / TotalPM_area)
 
   SFAB_ISRM_demo_data <-
@@ -107,7 +107,7 @@ SFAB_ISRM_demo_conc_geodata <-
   powerjoin::power_right_join(
     ISRM_US_SFAB_cell_geometries,
     .,
-    by = any_of(ISRM_ID_VARS),
+    by = "US_ISRM_id",
     check = powerjoin::check_specs(
       duplicate_keys_left = "abort",
       unmatched_keys_left = "warn",
@@ -179,13 +179,14 @@ SFAB_ISRM_demo_ems_data <- local({
   tidied_data <-
     csv_data %>%
     tidy_InMAP_names() %>%
-    select(-any_of(c("...1")))
+    select(-any_of(c("...1"))) %>%
+    rename(US_ISRM_id = isrm)
 
   filtered_data <-
     tidied_data %>%
     semi_join(
       ISRM_US_SFAB_cell_geometries,
-      by = any_of(ISRM_ID_VARS))
+      by = "US_ISRM_id")
 
   unit_aware_data <-
     filtered_data %>%

@@ -25,11 +25,11 @@ mapview_ISRM_concentrations <- function (
       pol_abbr == pollutant) %>%
     drop_units() %>%
     sum_concentration_by(
-      all_of(ISRM_ID_VAR)) %>%
+      any_of(ISRM_ID_VARS)) %>%
     left_join(
       require_data(ISRM_US_SFAB_cell_geometries),
       .,
-      by = all_of(ISRM_ID_VAR))
+      by = any_of(ISRM_ID_VARS))
 
   labels <-
     map_geodata[[zcol]] %>%
@@ -52,7 +52,7 @@ mapview_ISRM_concentrations <- function (
     left_join(
       map_geodata,
       .,
-      by = ISRM_ID_VAR) %>%
+      by = any_of(ISRM_ID_VARS)) %>%
     pull(
       popup_html)
 
@@ -100,7 +100,7 @@ SFAB_ISRM_pop_2020_data %>%
 SFAB_ISRM_demo_conc_data %>%
   drop_units() %>%
   sum_concentration_by(
-    pol_abbr, all_of(ISRM_ID_VAR), cell_km2) %>%
+    pol_abbr, any_of(ISRM_ID_VARS), cell_km2) %>%
   group_by(
     pol_abbr) %>%
   filter(

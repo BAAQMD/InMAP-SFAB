@@ -106,7 +106,7 @@ ISRM_CA_cell_geodata <- local({
       unmatched_keys_left = "abort",
       unmatched_keys_right = "abort",
       na_keys = "abort"),
-    by = any_of(ISRM_ID_VARS))
+    by = "CA_ISRM_id")
 
 })
 
