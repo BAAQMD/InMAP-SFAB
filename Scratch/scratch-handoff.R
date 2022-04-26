@@ -32,7 +32,7 @@ leaflet_map_SFBA() %>%
     color = "black",
     weight = 0.5, fillColor = "white", fillOpacity = 0.1) %>%
   addPolygons(
-    data = st_transform(CMAQ_envelope, 4326), # WGS84 GPS
+    data = st_transform(CMAQ_LCC_envelope, 4326), # WGS84 GPS
     stroke = "blue", weight = 1, fillOpacity = 0)
 
 #'----------------------------------------------------------------------
@@ -138,7 +138,7 @@ lltools::leaflet_map_SFBA() %>%
     fillColor = color_for_pop_km2(
       with(ISRM_US_SFAB_cell_geodata, TotalPop / cell_km2))) %>%
   addPolylines(
-    data = CMAQ_envelope %>% st_transform(4326),
+    data = CMAQ_LCC_envelope %>% st_transform(4326),
     weight = 2,
     color = "black") %>%
   addLegend(
@@ -167,7 +167,7 @@ ggplot() +
     data = ISRM_US_SFAB_cell_geodata) +
   geom_sf(
     color = "white", fill = NA,
-    data = CMAQ_envelope) +
+    data = CMAQ_LCC_envelope) +
   geom_sf(
     color = alpha("white", 0.8), fill = NA, size = 0.3,
     data = st_intersection(
@@ -186,7 +186,7 @@ ggplot() +
 #'
 #' - `ISRM_US_SFAB_cell_geodata` (as GeoJSON)
 #' - `CMAQ_raster_template` (as GeoTIFF)
-#' - `CMAQ_envelope` (as GeoJSON)
+#' - `CMAQ_LCC_envelope` (as GeoJSON)
 #'
 #'----------------------------------------------------------------------
 
@@ -196,9 +196,9 @@ ggplot() +
 #   layer = "ISRM_US_SFAB_cell_geodata")
 
 geotools::write_geojson(
-  as(st_as_sf(CMAQ_envelope) %>% mutate(FID = 1), "Spatial"),
+  as(st_as_sf(CMAQ_LCC_envelope) %>% mutate(FID = 1), "Spatial"),
   dsn = build_path("Geodata"),
-  layer = "CMAQ_envelope")
+  layer = "CMAQ_LCC_envelope")
 
 terra::writeRaster(
   CMAQ_raster_template,

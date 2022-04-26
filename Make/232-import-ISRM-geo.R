@@ -4,7 +4,7 @@
 #'
 #'----------------------------------------------------------------------
 
-CMAQ_envelope <-
+CMAQ_LCC_envelope <-
   require_data(CMAQ_raster_template) %>%
   st_envelope() %>%
   st_segmentize( # add points on edges (100m spacing)
@@ -102,13 +102,13 @@ comment(ISRM_US_cell_geometries) <-
 #'
 #'----------------------------------------------------------------------
 
-msg("filtering `ISRM_US_cell_geometries` using `CMAQ_envelope`")
+msg("filtering `ISRM_US_cell_geometries` using `CMAQ_LCC_envelope`")
 
 ISRM_US_SFAB_cell_geometries <-
   ISRM_US_cell_geometries %>%
   st_filter(
     st_transform(
-      CMAQ_envelope, st_crs(.))) %>%
+      CMAQ_LCC_envelope, st_crs(.))) %>%
   ensurer::ensure(
     nrow(.) == 2547)
 
@@ -127,5 +127,5 @@ write_geojson(
   build_path("Geodata", "ISRM_US_SFAB_cell_geometries.geojson"))
 
 write_geojson(
-  CMAQ_envelope,
-  build_path("Geodata", "BAAQMD_CMAQ_envelope.geojson"))
+  CMAQ_LCC_envelope,
+  build_path("Geodata", "BAAQMD_CMAQ_LCC_envelope.geojson"))
