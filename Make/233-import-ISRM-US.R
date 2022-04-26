@@ -208,7 +208,7 @@ ISRM_full_cell_geodata <- local({
 ISRM_US_SFAB_cell_geodata <-
   ISRM_US_cell_geodata %>%
   filter(across(
-    c(ISRM_ID_VAR),
+    any_of(ISRM_ID_VARS),
     ~ . %in% ISRM_US_SFAB_cell_ids))
 
 #'----------------------------------------------------------------------

@@ -94,7 +94,7 @@ ISRM_CA_cell_geodata <- local({
       nrow(.) == ISRM_CA_CELL_COUNT,
       all(.$allcells == 1:nrow(.))) %>%
     mutate(
-      !!ISRM_ID_VAR := allcells - 1L) # **NOTE**: `isrm` starts at 0; `allcells` starts at 1
+      CA_ISRM_id := allcells - 1L) # **NOTE**: `isrm` starts at 0; `allcells` starts at 1
 
   rm(ISRM_CA_tidync_obj)
 
@@ -106,12 +106,12 @@ ISRM_CA_cell_geodata <- local({
       unmatched_keys_left = "abort",
       unmatched_keys_right = "abort",
       na_keys = "abort"),
-    by = ISRM_ID_VAR)
+    by = any_of(ISRM_ID_VARS))
 
 })
 
 ISRM_CA_SFAB_cell_geodata <-
   ISRM_CA_cell_geodata %>%
   filter(across(
-    c(ISRM_ID_VAR),
+    any_of(ISRM_ID_VARS),
     ~ . %in% ISRM_US_SFAB_cell_ids))

@@ -101,13 +101,13 @@ SFAB_ISRM_demo_data <- local({
 SFAB_ISRM_demo_conc_geodata <-
   SFAB_ISRM_demo_data %>%
   select(
-    all_of(ISRM_ID_VAR),
+    any_of(ISRM_ID_VARS),
     any_of(ISRM_SRC_VARS),
     any_of(ISRM_CONC_VARS)) %>%
   powerjoin::power_right_join(
     ISRM_US_SFAB_cell_geometries,
     .,
-    by = ISRM_ID_VAR,
+    by = any_of(ISRM_ID_VARS),
     check = powerjoin::check_specs(
       duplicate_keys_left = "abort",
       unmatched_keys_left = "warn",
@@ -138,10 +138,10 @@ SFAB_ISRM_demo_conc_data <-
 SFAB_ISRM_pop_2020_geodata <-
   ISRM_US_SFAB_cell_geometries %>%
   select(
-    all_of(ISRM_ID_VAR)) %>%
+    any_of(ISRM_ID_VARS)) %>%
   with_interpolated_population(
     from = SFAB_tract_2020_geodata,
-    id_vars = ISRM_ID_VAR,
+    id_vars = intersect(ISRM_ID_VARS, names(.)),
     na = 0,
     verbose = TRUE)
 
@@ -149,7 +149,7 @@ SFAB_ISRM_pop_2020_data <-
   SFAB_ISRM_pop_2020_geodata %>%
   st_drop_geometry() %>%
   pivot_longer(
-    -all_of(ISRM_ID_VAR),
+    -any_of(ISRM_ID_VARS),
     names_to = "pop_h3",
     values_to = "pop_qty") %>%
   mutate(
@@ -185,7 +185,7 @@ SFAB_ISRM_demo_ems_data <- local({
     tidied_data %>%
     semi_join(
       ISRM_US_SFAB_cell_geometries,
-      by = ISRM_ID_VAR)
+      by = any_of(ISRM_ID_VARS))
 
   unit_aware_data <-
     filtered_data %>%
@@ -207,7 +207,7 @@ SFAB_ISRM_demo_ems_data <- local({
 
   unit_aware_data %>%
     select(
-      all_of(ISRM_ID_VAR),
+      any_of(ISRM_ID_VARS),
       any_of(ISRM_SRC_VARS),
       any_of(ISRM_EMS_VARS)) %>%
     pivot_longer(
@@ -245,7 +245,7 @@ SFAB_ISRM_demo_nested_geodata <- local({
     SFAB_ISRM_demo_conc_geodata %>%
     st_drop_geometry() %>%
     select(
-      all_of(ISRM_ID_VAR),
+      any_of(ISRM_ID_VARS),
       any_of(nest_vars)) %>%
     nest(
       conc_data = any_of(nest_vars))
@@ -256,20 +256,20 @@ SFAB_ISRM_demo_nested_geodata <- local({
       -any_of(nest_vars)) %>%
     left_join(
       nested_conc_data,
-      by = ISRM_ID_VAR)
+      by = any_of(ISRM_ID_VARS))
 
   nested_pop_data <-
     SFAB_ISRM_pop_2020_data %>%
     nest(
       pop_data = starts_with("pop")) %>%
     select(
-      all_of(ISRM_ID_VAR),
+      any_of(ISRM_ID_VARS),
       pop_data)
 
   nested_conc_geodata %>%
     powerjoin::power_left_join(
       nested_pop_data,
-      by = ISRM_ID_VAR,
+      by = any_of(ISRM_ID_VARS),
       check = powerjoin::check_specs(
         duplicate_keys_right = "abort",
         unmatched_keys_left = "warn")) %>%
@@ -288,13 +288,13 @@ SFAB_ISRM_demo_nested_geodata <- local({
 # SFAB_ISRM_demo_2020_exp_data <-
 #   SFAB_ISRM_pop_2020_data %>%
 #   sum_population_by(
-#     all_of(ISRM_ID_VAR),
+#     any_of(ISRM_ID_VARS),
 #     pop_h1) %>%
 #   filter(
 #     drop_units(pop_qty) > 0) %>%
 #   left_join(
 #     SFAB_ISRM_demo_conc_data,
-#     by = ISRM_ID_VAR) %>%
+#     by = any_of(ISRM_ID_VARS)) %>%
 #   filter(
 #     drop_units(conc_qty) > 0) %>%
 #   mutate(
@@ -333,11 +333,11 @@ SFAB_ISRM_demo_conc_data %>%
   drop_units() %>%
   sum_concentration_by(
     pol_abbr,
-    all_of(ISRM_ID_VAR)) %>%
+    any_of(ISRM_ID_VARS)) %>%
   spread(
     pol_abbr, conc_qty) %>%
   left_join(
     ISRM_US_SFAB_cell_geometries,
     .,
-    by = ISRM_ID_VAR)
+    by = any_of(ISRM_ID_VARS))
 
