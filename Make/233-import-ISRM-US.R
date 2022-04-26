@@ -4,13 +4,13 @@
 #'
 #'----------------------------------------------------------------------
 
-ISRM_CA_cell_lookup <-
+CA_ISRM_cell_lookup <-
   data_path(
     "UW",
     "2022-02-10",
     "ca_isrm_gridcells.csv") %>%
   read_csv(
-    col_names = c("ISRM_CA_cell_id", "isrm"),
+    col_names = c("CA_ISRM_cell_id", "isrm"),
     col_types = cols(.default = col_integer()),
     skip = 1) %>%
   tidy_InMAP_names() %>%
@@ -167,7 +167,7 @@ ISRM_US_SFAB_cube <-
 #' Extract baseline data and join it to cell geometries, yielding:
 #'
 #' - `ISRM_full_cell_geodata`; and
-#' - `ISRM_CA_cell_geodata`
+#' - `CA_ISRM_cell_geodata`
 #'     - A subset of `ISRM_full_cell_geodata`
 #'         - Where `ISRM_id` is in `ISRM_US_SFAB_cell_ids`
 #'
@@ -217,7 +217,7 @@ ISRM_US_SFAB_cell_geodata <-
 #'
 #'----------------------------------------------------------------------
 
-write_data(ISRM_CA_cell_lookup)
+write_data(CA_ISRM_cell_lookup)
 write_data(ISRM_US_cell_geometries)
 write_data(ISRM_US_SFAB_cell_geometries)
 write_data(ISRM_US_SFAB_cell_geodata)

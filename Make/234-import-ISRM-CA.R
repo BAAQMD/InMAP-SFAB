@@ -1,46 +1,78 @@
 #'----------------------------------------------------------------------
 #'
+#' Import `CA_ISRM_cell_geometries` from UW-supplied shapefile.
+#'
+#' FIXME: is `CA_ISRM_id = JoinID` correct?
+#' - See https://github.com/BAAQMD/InMAP-SFAB/issues/5#issuecomment-1110000473)
+#'
+#'----------------------------------------------------------------------
+
+CA_ISRM_cell_geometries <-
+  data_path("UW", "2022-04-25", "InMAP_gridCells.shp") %>%
+  read_shp() %>%
+  ensurer::ensure(
+    nrow(.) == CA_ISRM_CELL_COUNT) %>%
+  rename(
+    CA_ISRM_id = JoinID) # FIXME
+
+#'----------------------------------------------------------------------
+#'
+#' Filter `CA_ISRM_cell_geometries`,
+#' using `CMAQ_LCC_envelope`,
+#' yielding `CA_ISRM_SFAB_cell_geodata` (n = 2,553 cells).
+#'
+#'----------------------------------------------------------------------
+
+msg("filtering `CA_ISRM_cell_geometries` using `CMAQ_LCC_envelope`")
+
+CA_ISRM_SFAB_cell_geometries <-
+  CA_ISRM_cell_geometries %>%
+  st_filter(
+    st_transform(
+      CMAQ_LCC_envelope, st_crs(.))) %>%
+  ensurer::ensure(
+    nrow(.) == 5486)
+
+CA_ISRM_SFAB_cell_ids <-
+  CA_ISRM_SFAB_cell_geometries %>%
+  pull_any(ISRM_ID_VARS)
+
+#'----------------------------------------------------------------------
+#'
 #' Extract deltas for the "SFAB" domain, from the "Cali" ISRM dataset,
-#'   into an in-memory array `ISRM_CA_SFAB_array`.
+#'   into an in-memory array `CA_ISRM_SFAB_array`.
 #'
 #' - Per variable, this step consumes ~50 MB and takes ~2 seconds.
 #' - See `R/extract_ISRM_array.R` for more details.
 #'
 #'----------------------------------------------------------------------
 
-ISRM_US_SFAB_cell_ids <-
-  ISRM_US_SFAB_cell_geometries %>%
-  pull(all_of(ISRM_ID_VAR))
+CA_ISRM_SFAB_array <- local({
 
-ISRM_CA_SFAB_array <- local({
-
-  ISRM_CA_ncdf4_obj <-
+  CA_ISRM_ncdf4_obj <-
     ncdf4::nc_open(
-      ISRM_CA_NC_PATH)
+      CA_ISRM_NC_PATH)
 
-  varids <- c(
+  conc_vars <- c(
     "PrimaryPM25",
-    "SOA",
-    "pNH4",
-    "pNO3",
-    "pSO4")
+    "SOA") # , "pNH4", "pNO3", "pSO4")
 
   extract_L0_varid <- function (varid) {
     extract_ISRM_array(
-      ISRM_CA_ncdf4_obj,
-      ISRM_US_SFAB_cell_ids,
+      CA_ISRM_ncdf4_obj,
+      CA_ISRM_SFAB_cell_ids,
       varid = varid,
       layer = 1)
   }
 
   array_list <-
-    varids %>%
+    conc_vars %>%
     map(progressively(
       extract_L0_varid,
       total = length(.)))
 
   ncdf4::nc_close(
-    ISRM_CA_ncdf4_obj)
+    CA_ISRM_ncdf4_obj)
 
   bind_arrays(
     array_list,
@@ -56,51 +88,45 @@ ISRM_CA_SFAB_array <- local({
 #'
 #'----------------------------------------------------------------------
 
-ISRM_CA_SFAB_cube <-
+CA_ISRM_SFAB_cube <-
   tbl_cube(
-    dimensions = dimnames(ISRM_CA_SFAB_array),
-    measures = list(value = ISRM_CA_SFAB_array))
+    dimensions = dimnames(CA_ISRM_SFAB_array),
+    measures = list(value = CA_ISRM_SFAB_array))
 
 #'----------------------------------------------------------------------
 #'
 #' Extract baseline data and join it to cell geometries, yielding:
 #'
-#' - `ISRM_CA_cell_geodata`; and
-#' - `ISRM_CA_SFAB_cell_geodata`
+#' - `CA_ISRM_cell_geodata`; and
+#' - `CA_ISRM_SFAB_cell_geodata`
 #'     - A subset of `ISRM_full_cell_geodata`
 #'         - Where `ISRM_id` is in `ISRM_US_SFAB_cell_ids`
 #'
 #'----------------------------------------------------------------------
 
-ISRM_US_CA_cell_geometries <-
-  ISRM_US_cell_geometries %>%
-  semi_join(
-    ISRM_CA_cell_lookup,
-    by = "ISRM_id")
+CA_ISRM_cell_geodata <- local({
 
-ISRM_CA_cell_geodata <- local({
-
-  ISRM_CA_tidync_obj <-
+  CA_ISRM_tidync_obj <-
     tidync::tidync(
-      ISRM_CA_NC_PATH)
+      CA_ISRM_NC_PATH)
 
-  ISRM_CA_baseline_data <-
-    ISRM_CA_tidync_obj %>%
+  CA_ISRM_baseline_data <-
+    CA_ISRM_tidync_obj %>%
     tidync::activate("D3") %>%
     hyper_tibble() %>%
     filter(
       Layer == 0) %>%
     ensurer::ensure(
-      nrow(.) == ISRM_CA_CELL_COUNT,
+      nrow(.) == CA_ISRM_CELL_COUNT,
       all(.$allcells == 1:nrow(.))) %>%
     mutate(
       CA_ISRM_id := allcells)
 
-  rm(ISRM_CA_tidync_obj)
+  rm(CA_ISRM_tidync_obj)
 
   powerjoin::power_left_join(
-    ISRM_US_CA_cell_geometries,
-    ISRM_CA_baseline_data,
+    CA_ISRM_cell_geometries,
+    CA_ISRM_baseline_data,
     check = powerjoin::check_specs(
       column_conflict = "abort",
       unmatched_keys_left = "abort",
@@ -110,8 +136,18 @@ ISRM_CA_cell_geodata <- local({
 
 })
 
-ISRM_CA_SFAB_cell_geodata <-
-  ISRM_CA_cell_geodata %>%
+CA_ISRM_SFAB_cell_geodata <-
+  CA_ISRM_cell_geodata %>%
   filter(across(
     any_of(ISRM_ID_VARS),
-    ~ . %in% ISRM_US_SFAB_cell_ids))
+    ~ . %in% CA_ISRM_SFAB_cell_ids))
+
+#'----------------------------------------------------------------------
+#'
+#' Write objects to disk.
+#'
+#'----------------------------------------------------------------------
+
+write_data(CA_ISRM_cell_geometries)
+write_data(CA_ISRM_cell_geodata)
+write_data(CA_ISRM_SFAB_cell_geodata)

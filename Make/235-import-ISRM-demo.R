@@ -1,4 +1,5 @@
 require_data(ISRM_US_SFAB_cell_geometries)
+require_data(CA_ISRM_SFAB_cell_geometries)
 require_data(SFAB_tract_2020_geodata)
 
 #'----------------------------------------------------------------------
