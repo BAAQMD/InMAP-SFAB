@@ -94,7 +94,7 @@ ISRM_CA_cell_geodata <- local({
       nrow(.) == ISRM_CA_CELL_COUNT,
       all(.$allcells == 1:nrow(.))) %>%
     mutate(
-      CA_ISRM_id := allcells - 1L) # **NOTE**: `isrm` starts at 0; `allcells` starts at 1
+      CA_ISRM_id := allcells)
 
   rm(ISRM_CA_tidync_obj)
 
