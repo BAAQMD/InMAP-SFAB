@@ -1,6 +1,9 @@
 source(here::here("Make", "100-setup.R"))
 
 require_data(ISRM_US_CA_cell_geometries)
+require_data(ISRM_CA_cell_geometries)
+require_data(ISRM_CA_SFAB_cell_geometries)
+
 data(us_states, package = "spData")
 
 CA_boundary <-
