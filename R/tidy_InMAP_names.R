@@ -3,8 +3,8 @@ tidy_InMAP_names <- function (
   codec = c(
     "src_h1" = "Sector",
     "SCC_id" = "SCC",
-    "PM25_TOT" = "TotalPM25",
-    "PM25_PRI" = "PrimaryPM25",
+    "TotalPM25" = "TotalPM25",
+    "PrimaryPM25" = "PrimaryPM25",
     "NatAm" = "Native_American",
     "PcIsl" = "Pacific_Islander",
     "Multi" = "Multiple")
