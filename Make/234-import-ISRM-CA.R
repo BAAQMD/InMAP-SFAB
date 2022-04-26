@@ -7,13 +7,20 @@
 #'
 #'----------------------------------------------------------------------
 
-CA_ISRM_cell_geometries <-
-  data_path("UW", "2022-04-25", "InMAP_gridCells.shp") %>%
-  read_shp() %>%
-  ensurer::ensure(
-    nrow(.) == CA_ISRM_CELL_COUNT) %>%
-  rename(
-    CA_ISRM_id = JoinID) # FIXME
+CA_ISRM_cell_geometries <- local({
+
+  shp_path <-
+    data_path("UW", "2022-04-25", "InMAP_gridCells.shp")
+
+  read_shp(shp_path) %>%
+    ensurer::ensure(
+      nrow(.) == CA_ISRM_CELL_COUNT) %>%
+    rename(
+      CA_ISRM_id = JoinID) %>%
+    set_comment(
+      shp_path)
+
+})
 
 #'----------------------------------------------------------------------
 #'
@@ -23,19 +30,19 @@ CA_ISRM_cell_geometries <-
 #'
 #'----------------------------------------------------------------------
 
-msg("filtering `CA_ISRM_cell_geometries` using `CMAQ_LCC_envelope`")
+msg("filtering `CA_ISRM_cell_geometries` using `SFAB_boundary`")
 
 CA_ISRM_SFAB_cell_geometries <-
   CA_ISRM_cell_geometries %>%
   st_filter(
-    st_transform(
-      CMAQ_LCC_envelope, st_crs(.))) %>%
+    st_transform(SFAB_boundary, st_crs(.))) %>%
   ensurer::ensure(
-    nrow(.) == 5486)
+    nrow(.) == 3541)
 
 CA_ISRM_SFAB_cell_ids <-
   CA_ISRM_SFAB_cell_geometries %>%
-  pull_any(ISRM_ID_VARS)
+  pull_any(
+    ISRM_ID_VARS)
 
 #'----------------------------------------------------------------------
 #'
@@ -140,7 +147,14 @@ CA_ISRM_SFAB_cell_geodata <-
   CA_ISRM_cell_geodata %>%
   filter(across(
     any_of(ISRM_ID_VARS),
-    ~ . %in% CA_ISRM_SFAB_cell_ids))
+    ~ . %in% CA_ISRM_SFAB_cell_ids)) %>%
+  with_interpolated_population(
+    from = SFAB_tract_2020_geodata,
+    id_vars = intersect(ISRM_ID_VARS, names(.)),
+    na = 0,
+    verbose = TRUE) %>%
+  set_comment(
+    rel_path(CA_ISRM_NC_PATH))
 
 #'----------------------------------------------------------------------
 #'
@@ -151,3 +165,7 @@ CA_ISRM_SFAB_cell_geodata <-
 write_data(CA_ISRM_cell_geometries)
 write_data(CA_ISRM_cell_geodata)
 write_data(CA_ISRM_SFAB_cell_geodata)
+
+write_geojson(
+  CA_ISRM_cell_geometries,
+  build_path("Geodata", "CA_ISRM_SFAB_cell_geometries.geojson"))

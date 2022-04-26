@@ -4,7 +4,7 @@
 #'
 #'----------------------------------------------------------------------
 
-CA_ISRM_cell_lookup <-
+US_ISRM_CA_cell_lookup <-
   data_path(
     "UW",
     "2022-02-10",
@@ -89,20 +89,20 @@ comment(US_ISRM_cell_geometries) <-
 #'----------------------------------------------------------------------
 #'
 #' Filter `US_ISRM_cell_geometries`,
-#' using `CMAQ_LCC_envelope`,
-#' yielding `US_ISRM_SFAB_cell_geodata` (n = 2,553 cells).
+#' using `SFAB_boundary`,
+#' yielding `US_ISRM_SFAB_cell_geodata` (n = 1,929 cells).
 #'
 #'----------------------------------------------------------------------
 
-msg("filtering `US_ISRM_cell_geometries` using `CMAQ_LCC_envelope`")
+msg("filtering `US_ISRM_cell_geometries` using `SFAB_boundary`")
 
 US_ISRM_SFAB_cell_geometries <-
   US_ISRM_cell_geometries %>%
   st_filter(
     st_transform(
-      CMAQ_LCC_envelope, st_crs(.))) %>%
+      SFAB_boundary, st_crs(.))) %>%
   ensurer::ensure(
-    nrow(.) == 2547)
+    nrow(.) == 1929)
 
 #'----------------------------------------------------------------------
 #'
@@ -173,7 +173,7 @@ US_ISRM_SFAB_cube <-
 #'
 #'----------------------------------------------------------------------
 
-ISRM_full_cell_geodata <- local({
+US_ISRM_cell_geodata <- local({
 
   ISRM_full_tidync_obj <-
     tidync::tidync(
@@ -217,7 +217,7 @@ US_ISRM_SFAB_cell_geodata <-
 #'
 #'----------------------------------------------------------------------
 
-write_data(CA_ISRM_cell_lookup)
+write_data(US_ISRM_CA_cell_lookup)
 write_data(US_ISRM_cell_geometries)
 write_data(US_ISRM_SFAB_cell_geometries)
 write_data(US_ISRM_SFAB_cell_geodata)
