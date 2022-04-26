@@ -7,13 +7,13 @@
 #'
 #'----------------------------------------------------------------------
 
-require_data(ISRM_US_SFAB_cell_geodata)
+require_data(US_ISRM_SFAB_cell_geodata)
 
 #
 # Not true --- why? Is "Other/Multi" omitted?
 #
 with(
-  ISRM_US_SFAB_cell_geodata,
+  US_ISRM_SFAB_cell_geodata,
   testthat::expect_equal(
     sum(TotalPop),
     sum(Asian + Black + Latino + Native + WhiteNoLat)))
@@ -27,9 +27,9 @@ with(
 
 leaflet_map_SFBA() %>%
   addPolygons(
-    data = ISRM_US_SFAB_cell_geodata,
+    data = US_ISRM_SFAB_cell_geodata,
     popup = leafpop::popupTable(
-      ISRM_US_SFAB_cell_geodata,
+      US_ISRM_SFAB_cell_geodata,
       zcol = c("US_ISRM_id", "cell_km2")),
     color = "black",
     weight = 0.5, fillColor = "white", fillOpacity = 0.1) %>%
@@ -43,7 +43,7 @@ leaflet_map_SFBA() %>%
 #'
 #'----------------------------------------------------------------------
 
-ISRM_US_NC_PATH %>%
+US_ISRM_NC_PATH %>%
   ncmeta::nc_atts() %>%
   mutate(value = unlist(value)) %>%
   select(variable, name, value) %>%
@@ -70,7 +70,7 @@ local({
 
   ISRM_full_ncdf4_obj <-
     ncdf4::nc_open(
-      ISRM_US_NC_PATH)
+      US_ISRM_NC_PATH)
 
   i <- 1201; j <- 1202; k <- 0; v <- "pNH4"
   s <- paste0("S", i+1); r <- paste0("R", j+1); l <- paste0("L", k+1)
@@ -94,13 +94,13 @@ local({
     tol = tol)
 
   testthat::expect_equal(
-    ISRM_US_SFAB_array[s, r, l, v] %>%
+    US_ISRM_SFAB_array[s, r, l, v] %>%
       { as.numeric(.) * 2 },
     expected,
     tol = tol)
 
   testthat::expect_equal(
-    ISRM_US_SFAB_cube %>%
+    US_ISRM_SFAB_cube %>%
       filter(
         source   == s,
         receptor == r,
@@ -132,13 +132,13 @@ color_for_pop_km2 <- function (x, palette = "viridis") {
 
 lltools::leaflet_map_SFBA() %>%
   addGlPolygonOverlay(
-    ISRM_US_SFAB_cell_geodata,
+    US_ISRM_SFAB_cell_geodata,
     stroke = "black",
     smoothFactor = 0,
     weight = 0.1,
     fillOpacity = 0.7,
     fillColor = color_for_pop_km2(
-      with(ISRM_US_SFAB_cell_geodata, TotalPop / cell_km2))) %>%
+      with(US_ISRM_SFAB_cell_geodata, TotalPop / cell_km2))) %>%
   addPolylines(
     data = CMAQ_LCC_envelope %>% st_transform(4326),
     weight = 2,
@@ -166,7 +166,7 @@ ggplot() +
     limits = c(0, 15)) +
   geom_sf(
     color = alpha("white", 0.5), size = 0.1,
-    data = ISRM_US_SFAB_cell_geodata) +
+    data = US_ISRM_SFAB_cell_geodata) +
   geom_sf(
     color = "white", fill = NA,
     data = CMAQ_LCC_envelope) +
@@ -178,24 +178,24 @@ ggplot() +
   labs(
     title = "Baseline TotalPM25",
     subtitle = str_glue(
-      "Basis: {basename(ISRM_US_NC_PATH)} ",
-      "and {basename(ISRM_US_LATLON_CSV_PATH)}"),
+      "Basis: {basename(US_ISRM_NC_PATH)} ",
+      "and {basename(US_ISRM_LATLON_CSV_PATH)}"),
     caption = str_glue("DRAFT {str_date()}"))
 
 #'----------------------------------------------------------------------
 #'
 #' Export copies of the following to `Build/Geodata/`:
 #'
-#' - `ISRM_US_SFAB_cell_geodata` (as GeoJSON)
+#' - `US_ISRM_SFAB_cell_geodata` (as GeoJSON)
 #' - `CMAQ_raster_template` (as GeoTIFF)
 #' - `CMAQ_LCC_envelope` (as GeoJSON)
 #'
 #'----------------------------------------------------------------------
 
 # geotools::write_geojson(
-#   as(ISRM_US_SFAB_cell_geodata, "Spatial"),
+#   as(US_ISRM_SFAB_cell_geodata, "Spatial"),
 #   dsn = build_path("Geodata"),
-#   layer = "ISRM_US_SFAB_cell_geodata")
+#   layer = "US_ISRM_SFAB_cell_geodata")
 
 geotools::write_geojson(
   as(st_as_sf(CMAQ_LCC_envelope) %>% mutate(FID = 1), "Spatial"),

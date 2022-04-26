@@ -1,6 +1,6 @@
 source(here::here("Make", "100-setup.R"))
 
-require_data(ISRM_US_CA_cell_geometries)
+require_data(US_ISRM_CA_cell_geometries)
 require_data(CA_ISRM_cell_geometries)
 require_data(CA_ISRM_SFAB_cell_geometries)
 
@@ -19,8 +19,8 @@ CA_lookup_csv_path <-
 fig_description <- labs(
   title = "ISRM Cell Geometries",
   subtitle = str_glue(
-    "Polygons imported from {comment(ISRM_US_cell_geometries)}. ",
-    "Showing subset that match {CA_lookup_csv_path} (n = {format_count(nrow(ISRM_US_CA_cell_geometries))}).",
+    "Polygons imported from {comment(US_ISRM_cell_geometries)}. ",
+    "Showing subset that match {CA_lookup_csv_path} (n = {format_count(nrow(US_ISRM_CA_cell_geometries))}).",
     .sep = "\n"),
   caption = str_draft())
 
@@ -40,7 +40,7 @@ cell_layer <-
     fill = NA,
     size = I(0.1),
     alpha = I(0.5),
-    data = ISRM_US_CA_cell_geometries)
+    data = US_ISRM_CA_cell_geometries)
 
 fig1_object <-
   fig0_object +

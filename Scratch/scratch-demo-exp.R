@@ -27,7 +27,7 @@ mapview_ISRM_concentrations <- function (
     sum_concentration_by(
       any_of(ISRM_ID_VARS)) %>%
     left_join(
-      require_data(ISRM_US_SFAB_cell_geometries),
+      require_data(US_ISRM_SFAB_cell_geometries),
       .,
       by = any_of(ISRM_ID_VARS))
 

@@ -37,13 +37,13 @@ ISRM_CRS <-
   st_crs()
 
 # The full ISRM (about 166 GB on disk)
-ISRM_US_CELL_COUNT <- 52411
-ISRM_US_NC_URL <- "https://zenodo.org/record/2589760/files/isrm_v1.2.1.zip?download=1"
-ISRM_US_NC_PATH <- here::here("Data", "Zenodo", "isrm_v1.2.1.ncf")
-ISRM_US_CA_CELL_COUNT <- 9001
+US_ISRM_CELL_COUNT <- 52411
+US_ISRM_NC_URL <- "https://zenodo.org/record/2589760/files/isrm_v1.2.1.zip?download=1"
+US_ISRM_NC_PATH <- here::here("Data", "Zenodo", "isrm_v1.2.1.ncf")
+US_ISRM_CA_CELL_COUNT <- 9001
 
 # Cell geometry definitions for the full ISRM (minimum cell size ≈ 1 km^2)
-ISRM_US_LATLON_CSV_PATH <- here::here("Data", "UW", "2022-02-10", "isrm_boundaries_latlons.csv")
+US_ISRM_LATLON_CSV_PATH <- here::here("Data", "UW", "2022-02-10", "isrm_boundaries_latlons.csv")
 
 # The California "hi-res" prototype,
 # via https://drive.google.com/drive/folders/1WmLRz7iWo2MjtSikgHEig7M0NvK2sOns

@@ -17,29 +17,29 @@ CA_ISRM_cell_lookup <-
   rename(
     US_ISRM_id = isrm) %>%
   ensurer::ensure(
-    nrow(.) == ISRM_US_CA_CELL_COUNT) # n = 9,001 CA cells in the full US ISRM
+    nrow(.) == US_ISRM_CA_CELL_COUNT) # n = 9,001 CA cells in the full US ISRM
 
 #'----------------------------------------------------------------------
 #'
-#' Create `ISRM_US_cell_geometries`. This corresponds to the entire domain
+#' Create `US_ISRM_cell_geometries`. This corresponds to the entire domain
 #' (n = 52,411 cells) --- not just California or Bay Area.
 #'
 #'----------------------------------------------------------------------
 
-ISRM_US_cell_geometries <- local({
+US_ISRM_cell_geometries <- local({
 
   msg(
-    "constructing `ISRM_US_cell_geometries` from ",
-    fs::path_rel(ISRM_US_LATLON_CSV_PATH, here::here()))
+    "constructing `US_ISRM_cell_geometries` from ",
+    fs::path_rel(US_ISRM_LATLON_CSV_PATH, here::here()))
 
   full_csv_latlon_data <-
     read_csv(
-      ISRM_US_LATLON_CSV_PATH,
+      US_ISRM_LATLON_CSV_PATH,
       col_types = cols(
         isrm = col_integer(),
         .default = col_double())) %>%
     ensurer::ensure(
-      nrow(.) == ISRM_US_CELL_COUNT) %>%
+      nrow(.) == US_ISRM_CELL_COUNT) %>%
     tidy_InMAP_names() %>%
     rename(
       US_ISRM_id = isrm)
@@ -83,21 +83,21 @@ ISRM_US_cell_geometries <- local({
 
 })
 
-comment(ISRM_US_cell_geometries) <-
-  fs::path_rel(ISRM_US_LATLON_CSV_PATH, here::here())
+comment(US_ISRM_cell_geometries) <-
+  fs::path_rel(US_ISRM_LATLON_CSV_PATH, here::here())
 
 #'----------------------------------------------------------------------
 #'
-#' Filter `ISRM_US_cell_geometries`,
+#' Filter `US_ISRM_cell_geometries`,
 #' using `CMAQ_LCC_envelope`,
-#' yielding `ISRM_US_SFAB_cell_geodata` (n = 2,553 cells).
+#' yielding `US_ISRM_SFAB_cell_geodata` (n = 2,553 cells).
 #'
 #'----------------------------------------------------------------------
 
-msg("filtering `ISRM_US_cell_geometries` using `CMAQ_LCC_envelope`")
+msg("filtering `US_ISRM_cell_geometries` using `CMAQ_LCC_envelope`")
 
-ISRM_US_SFAB_cell_geometries <-
-  ISRM_US_cell_geometries %>%
+US_ISRM_SFAB_cell_geometries <-
+  US_ISRM_cell_geometries %>%
   st_filter(
     st_transform(
       CMAQ_LCC_envelope, st_crs(.))) %>%
@@ -107,23 +107,23 @@ ISRM_US_SFAB_cell_geometries <-
 #'----------------------------------------------------------------------
 #'
 #' Extract deltas for the "SFAB" domain, from the **full** ISRM dataset,
-#'   into an in-memory array `ISRM_US_SFAB_array`.
+#'   into an in-memory array `US_ISRM_SFAB_array`.
 #'
 #' - Per variable, this step consumes ~50 MB and takes ~2 seconds.
 #' - See `R/extract_ISRM_array.R` for more details.
 #'
 #'----------------------------------------------------------------------
 
-ISRM_US_SFAB_cell_ids <-
-  ISRM_US_SFAB_cell_geometries %>%
+US_ISRM_SFAB_cell_ids <-
+  US_ISRM_SFAB_cell_geometries %>%
   select(any_of(ISRM_ID_VARS)) %>%
   unlist()
 
-ISRM_US_SFAB_array <- local({
+US_ISRM_SFAB_array <- local({
 
   ISRM_full_ncdf4_obj <-
     ncdf4::nc_open(
-      ISRM_US_NC_PATH)
+      US_ISRM_NC_PATH)
 
   varids <- c(
     "PrimaryPM25",
@@ -136,7 +136,7 @@ ISRM_US_SFAB_array <- local({
     map(varids,
         ~ extract_ISRM_array(
           ISRM_full_ncdf4_obj,
-          ISRM_US_SFAB_cell_ids,
+          US_ISRM_SFAB_cell_ids,
           varid = .,
           layer = 1))
 
@@ -157,10 +157,10 @@ ISRM_US_SFAB_array <- local({
 #'
 #'----------------------------------------------------------------------
 
-ISRM_US_SFAB_cube <-
+US_ISRM_SFAB_cube <-
   tbl_cube(
-    dimensions = dimnames(ISRM_US_SFAB_array),
-    measures = list(value = ISRM_US_SFAB_array))
+    dimensions = dimnames(US_ISRM_SFAB_array),
+    measures = list(value = US_ISRM_SFAB_array))
 
 #'----------------------------------------------------------------------
 #'
@@ -169,7 +169,7 @@ ISRM_US_SFAB_cube <-
 #' - `ISRM_full_cell_geodata`; and
 #' - `CA_ISRM_cell_geodata`
 #'     - A subset of `ISRM_full_cell_geodata`
-#'         - Where `ISRM_id` is in `ISRM_US_SFAB_cell_ids`
+#'         - Where `ISRM_id` is in `US_ISRM_SFAB_cell_ids`
 #'
 #'----------------------------------------------------------------------
 
@@ -177,7 +177,7 @@ ISRM_full_cell_geodata <- local({
 
   ISRM_full_tidync_obj <-
     tidync::tidync(
-      ISRM_US_NC_PATH)
+      US_ISRM_NC_PATH)
 
   ISRM_full_baseline_data <-
     ISRM_full_tidync_obj %>%
@@ -186,7 +186,7 @@ ISRM_full_cell_geodata <- local({
     filter(
       Layer == 0) %>%
     ensurer::ensure(
-      nrow(.) == ISRM_US_CELL_COUNT,
+      nrow(.) == US_ISRM_CELL_COUNT,
       all(.$allcells == 1:nrow(.))) %>%
     mutate(
       US_ISRM_id := allcells - 1L) # **NOTE**: `isrm` starts at 0; `allcells` starts at 1
@@ -194,7 +194,7 @@ ISRM_full_cell_geodata <- local({
   rm(ISRM_full_tidync_obj)
 
   powerjoin::power_left_join(
-    ISRM_US_cell_geometries,
+    US_ISRM_cell_geometries,
     ISRM_full_baseline_data,
     check = powerjoin::check_specs(
       column_conflict = "abort",
@@ -205,11 +205,11 @@ ISRM_full_cell_geodata <- local({
 
 })
 
-ISRM_US_SFAB_cell_geodata <-
-  ISRM_US_cell_geodata %>%
+US_ISRM_SFAB_cell_geodata <-
+  US_ISRM_cell_geodata %>%
   filter(across(
     any_of(ISRM_ID_VARS),
-    ~ . %in% ISRM_US_SFAB_cell_ids))
+    ~ . %in% US_ISRM_SFAB_cell_ids))
 
 #'----------------------------------------------------------------------
 #'
@@ -218,10 +218,10 @@ ISRM_US_SFAB_cell_geodata <-
 #'----------------------------------------------------------------------
 
 write_data(CA_ISRM_cell_lookup)
-write_data(ISRM_US_cell_geometries)
-write_data(ISRM_US_SFAB_cell_geometries)
-write_data(ISRM_US_SFAB_cell_geodata)
+write_data(US_ISRM_cell_geometries)
+write_data(US_ISRM_SFAB_cell_geometries)
+write_data(US_ISRM_SFAB_cell_geodata)
 
 write_geojson(
-  ISRM_US_SFAB_cell_geometries,
-  build_path("Geodata", "ISRM_US_SFAB_cell_geometries.geojson"))
+  US_ISRM_SFAB_cell_geometries,
+  build_path("Geodata", "US_ISRM_SFAB_cell_geometries.geojson"))

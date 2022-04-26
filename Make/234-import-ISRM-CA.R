@@ -100,7 +100,7 @@ CA_ISRM_SFAB_cube <-
 #' - `CA_ISRM_cell_geodata`; and
 #' - `CA_ISRM_SFAB_cell_geodata`
 #'     - A subset of `ISRM_full_cell_geodata`
-#'         - Where `ISRM_id` is in `ISRM_US_SFAB_cell_ids`
+#'         - Where `ISRM_id` is in `US_ISRM_SFAB_cell_ids`
 #'
 #'----------------------------------------------------------------------
 

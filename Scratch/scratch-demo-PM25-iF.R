@@ -4,7 +4,7 @@ require_data(SFAB_tract_2020_raceeth_data)
 require_data(SFAB_ISRM_demo_ems_data)
 require_data(SFAB_ISRM_demo_conc_data)
 require_data(SFAB_ISRM_pop_2020_data)
-require_data(ISRM_US_SFAB_cell_geometries)
+require_data(US_ISRM_SFAB_cell_geometries)
 require_data(ISRM_ID_VARS)
 
 #'
@@ -59,7 +59,7 @@ demo_PM25_ems_qty <-
   filter(
     pol_abbr == "PM25") %>%
   semi_join(
-    ISRM_US_SFAB_cell_geometries,
+    US_ISRM_SFAB_cell_geometries,
     by = any_of(ISRM_ID_VARS)) %>%
   mutate(
     ems_qty = set_units(ems_qty, unique(ems_unit), mode = "character")) %>%
