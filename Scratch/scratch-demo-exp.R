@@ -31,12 +31,18 @@ mapview_ISRM_concentrations <- function (
       .,
       by = any_of(ISRM_ID_VARS))
 
-  labels <-
-    map_geodata[[zcol]] %>%
+  cell_ids <-
+    unlist(select(map_geodata, any_of(ISRM_ID_VARS)))
+
+  cell_values <-
+    map_geodata[[zcol]]
+
+  cell_labels <-
+    cell_values %>%
     format_digits(digits) %>%
     str_suffix(str_glue(" {unit}")) %>%
-    replace(is.na(map_geodata[[zcol]]), "NA") %>%
-    str_c("#", map_geodata[[ISRM_ID_VAR]], ": ", ., " ", pollutant)
+    replace(is.na(cell_values), "NA") %>%
+    str_c("#", cell_ids, ": ", ., " ", pollutant)
 
   html_table <- function (.data) {
     table_data <- spread(drop_units(.data), pol_abbr, conc_qty)
