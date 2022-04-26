@@ -8,13 +8,12 @@ This directory contains datasets used as input. For output, see [Build/].
 
 ## Contents of `Data/UW/`
 
+**`2022-02-10/`** contents were supplied by UW team to Phil Martien via email with link to Dropbox folder.
+
 **`2022-03-07/`** contents were supplied by UW team via Dropbox folder [Bay Area ISRM/].
 They were subsequently mirrored to this folder.
 
-**`2022-02-10/`** contents were supplied by UW team to Phil Martien via email with link to Dropbox folder:
-
-- Data/ISRM/ca_isrm_gridcells.csv
-- Data/ISRM/isrm_boundaries_latlons.csv
+**`2022-04-25`** contents were shared by UW team via link to Google Drive [folder][ca_isrm2].
 
 For additional documentation, see `[References/Handoff/]`. 
 
@@ -24,7 +23,7 @@ There's some code in `Make/` that attempts to download them, but it seems really
 The code in `Make/` expects to find these files in a certain location; see `Make/*.R` for details.
 
 - [Big ISRM][Zenodo]
-- [CA ISRM]
+- [CA ISRM][ca_isrm1]
 
 ## Contents of `Data/Socrata/`
 
@@ -36,7 +35,8 @@ The logic that translates and combines these into abbreviations of more familiar
 [Build/]: https://github.com/BAAQMD/ISRM-SFAB/blob/master/Build/
 [References/Handoff/]: https://github.com/BAAQMD/ISRM-SFAB/blob/master/References/Handoff
 [Zenodo]: https://zenodo.org/record/2589760#.YgREvS2ZPEa
-[CA ISRM]: https://drive.google.com/drive/folders/1WmLRz7iWo2MjtSikgHEig7M0NvK2sOns?usp=sharing
+[ca_isrm1]: https://drive.google.com/drive/folders/1WmLRz7iWo2MjtSikgHEig7M0NvK2sOns?usp=sharing
+[ca_isrm2]: https://drive.google.com/drive/folders/1jO5saBcQW1-qmiv-pjsICNiulud9SCU5
 [Bay Area ISRM/]: https://www.dropbox.com/sh/0bwdu3vnfsmrrzg/AAA87bGHmcv5Fr3GOTWXczZva?dl=0
 [exptools]: https://github.com/BAAQMD/exptools
 [marginal_values.zip]
