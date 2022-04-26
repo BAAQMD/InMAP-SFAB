@@ -25,6 +25,10 @@ build_path <- function (...) {
   here::here("Build", ...)
 }
 
+rel_path <- function (...) {
+  fs::path_rel(..., start = here::here())
+}
+
 ISRM_ID_VARS   <- c("US_ISRM_id", "CA_ISRM_id")
 ISRM_SRC_VARS  <- c("src_h1", "SCC_id")
 ISRM_EMS_VARS  <- c("PM25", "NOx", "SOx", "VOC", "NH3")
