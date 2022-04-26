@@ -9,14 +9,14 @@ require_data(ISRM_ID_VARS)
 
 #'
 #' In the support work for the NG appliances rulemaking, the regional average
-#' population-weighted concentration of primary PM2.5 (`PrimaryPM25`) was
+#' population-weighted concentration of primary PM2.5 (`PM25_PRI`) was
 #' found to be 4.40 ug/m^3.
 #'
 #' That from a total SFAB emissions of 12,396 ton/yr PM2.5, obtained there via:
 #'
 #'   CMAQ_ems_stobj[SFAB_boundary] %>%
 #'     filter(scenario == "Baseline") %>%
-#'     pull_total(PrimaryPM25)
+#'     pull_total(PM25_PRI)
 #'
 #' If we _don't_ clip by the `SFAB_boundary`, the total would instead be
 #' 23,857 ton/yr PM2.5.
@@ -48,8 +48,8 @@ testthat::expect_equal(
 
 #' For comparison, in this demo, the numbers for `PM25_PRI` are:
 #'
-#' - Emissions: 17,885 ton/yr
-#' - Exposure:   1.428 ug/m3
+#' - Emissions: 11,289 ton/yr
+#' - Exposure:   1.546 ug/m3
 #'
 #' Assuming a constant breathing rate of 14.5 m3 d-1, the former works out to
 #' an intake fraction (iF) of 2.07 ppt, and the latter to 0.446 ppt.
@@ -67,7 +67,10 @@ demo_PM25_ems_qty <-
   sum()
 
 testthat::expect_equal(
-  demo_PM25_ems_qty, 17885, tol = 1e-4)
+  set_units(demo_PM25_ems_qty, "ton/yr"), 11289, tol = 1e-4)
+
+testthat::expect_equal(
+  set_units(demo_PM25_ems_qty, "t/d"), 28.04, tol = 1e-4)
 
 demo_PM25_ems_qty <-
   set_units(
@@ -84,11 +87,16 @@ demo_PrimaryPM25_conc_qty <-
   pull(`exp/pop`)
 
 testthat::expect_equal(
-  demo_PrimaryPM25_conc_qty, 1.428, tol = 1e-3)
+  demo_PrimaryPM25_conc_qty, 1.546, tol = 1e-3)
 
 demo_pop_qty <-
   pull_total(SFAB_ISRM_pop_2020_data, pop_qty) %>%
   set_units("Mperson")
+
+testthat::expect_equal(
+  demo_pop_qty,
+  set_units(7.63, "Mperson"),
+  tol = 1e-3)
 
 demo_PM25_iF <-
   intake_fraction(
@@ -98,22 +106,12 @@ demo_PM25_iF <-
     breathing_rate = breathing_rate)
 
 testthat::expect_equal(
-  demo_PM25_iF, set_units(3.55, "ppm"), tol = 1e-2)
+  demo_PM25_iF, set_units(6.10, "ppm"), tol = 1e-2)
 
 #'
-#' That's a ratio of more than 4:1.
+#' That's a ratio of about 5:2.
 #'
 show(NGC_PM25_iF / demo_PM25_iF)
-
-#'----------------------------------------------------------------------
-#'
-#' Now let's work with `ca_isrm.nc` data.
-#'
-#'----------------------------------------------------------------------
-
-CA_ISRM_pop_qty <-
-  with(CA_ISRM_SFAB_cell_geodata, sum(all))
-
 
 #'----------------------------------------------------------------------
 #'
@@ -126,7 +124,7 @@ table_data <- tribble(
   ~ variable, ~ basis, ~ value, ~ unit,
   "P",  "CMAQ",  drop_units(NGC_pop_qty), deparse_unit(NGC_pop_qty),
   "P",  "InMAP", drop_units(demo_pop_qty), deparse_unit(demo_pop_qty),
-  "C",  "CMAQ",  drop_units(NGC_PrimaryPM25_conc_qty), deparse_unit(NGC_PrimaryPM25_conc_qty),
+  "C",  "CMAQ",  drop_units(NGC_PM5_PRI_conc_qty), deparse_unit(NGC_PM5_PRI_conc_qty),
   "C",  "InMAP", drop_units(demo_PrimaryPM25_conc_qty), deparse_unit(demo_PrimaryPM25_conc_qty),
   "Q",  "CMAQ",  drop_units(breathing_rate), deparse_unit(breathing_rate),
   "Q",  "InMAP", drop_units(breathing_rate), deparse_unit(breathing_rate),
@@ -145,4 +143,5 @@ table_data %>%
   select_last(
     unit) %>%
   knitr::kable(
+    digits = 2,
     format = "markdown")
