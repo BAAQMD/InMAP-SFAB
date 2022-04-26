@@ -18,8 +18,8 @@ require_data(ISRM_ID_VARS)
 #'     filter(scenario == "Baseline") %>%
 #'     pull_total(PrimaryPM25)
 #'
-#' Assuming a breathing rate of 14.5 m^3/d, this works out to
-#' an intake fraction (iF) of **2.07 ppt**.
+#' If we _don't_ clip by the `SFAB_boundary`, the total would instead be
+#' 23,857 ton/yr PM2.5.
 #'
 
 NGC_PM5_PRI_conc_qty <-

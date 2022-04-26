@@ -225,3 +225,4 @@ write_data(US_ISRM_SFAB_cell_geodata)
 write_geojson(
   US_ISRM_SFAB_cell_geometries,
   build_path("Geodata", "US_ISRM_SFAB_cell_geometries.geojson"))
+

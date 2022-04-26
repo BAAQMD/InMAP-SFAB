@@ -8,7 +8,7 @@ require_data(SFAB_tract_2020_geodata)
 #'
 #'----------------------------------------------------------------------
 
-SFAB_ISRM_demo_data <- local({
+ISRM_demo_data <- local({
 
   csv_path <- data_path(
     "UW",
@@ -30,7 +30,7 @@ SFAB_ISRM_demo_data <- local({
     st_as_sf(wkt = "geometry", crs = WGS84_GPS) %>%
     st_km2()
 
-  msg("renaming fields and setting units in `SFAB_ISRM_demo_data`")
+  msg("renaming fields and setting units in `ISRM_demo_data`")
   msg("calculating Area = TotalPM25 / TotalPM_area")
 
   tidied_data <-
@@ -38,6 +38,9 @@ SFAB_ISRM_demo_data <- local({
     tidy_InMAP_names() %>%
     rename(
       US_ISRM_id = isrm)
+
+  POP_PCT_VARS <- c(
+    "White_per", "Black_per", "Asian_per", "Hispanic_per")
 
   unit_aware_data <-
     tidied_data %>%
@@ -62,11 +65,8 @@ SFAB_ISRM_demo_data <- local({
       starts_with("DeathsK_"),
       set_units, "death/km^2")) %>%
     mutate(across(
-      c(White_per, Black_per, Asian_per, Hispanic_per),
+      any_of(POP_PCT_VARS),
       ~ set_units(. * 100, "%"))) %>%
-    mutate(across(
-      c(DeathsK_White, DeathsK_Black, DeathsK_Asian, DeathsK_Hispanic),
-      set_units, "death/km^2")) %>%
     mutate(
       US_ISRM_id = as.integer(US_ISRM_id),
       Area = TotalPM25 / TotalPM_area)
@@ -74,7 +74,7 @@ SFAB_ISRM_demo_data <- local({
   comment(unit_aware_data) <-
     fs::path_rel(csv_path, here::here())
 
-  SFAB_ISRM_demo_data <-
+  ISRM_demo_data <-
     unit_aware_data
 
 })
@@ -103,7 +103,7 @@ SFAB_ISRM_demo_data <- local({
 #'----------------------------------------------------------------------
 
 SFAB_ISRM_demo_conc_geodata <-
-  SFAB_ISRM_demo_data %>%
+  ISRM_demo_data %>%
   select(
     any_of(ISRM_ID_VARS),
     any_of(ISRM_SRC_VARS),
@@ -120,7 +120,7 @@ SFAB_ISRM_demo_conc_geodata <-
     geometry)
 
 comment(SFAB_ISRM_demo_conc_geodata) <-
-  comment(SFAB_ISRM_demo_data)
+  comment(ISRM_demo_data)
 
 SFAB_ISRM_demo_conc_data <-
   SFAB_ISRM_demo_conc_geodata %>%
@@ -175,7 +175,7 @@ SFAB_ISRM_pop_2020_data <-
 #'
 #'----------------------------------------------------------------------
 
-SFAB_ISRM_demo_ems_data <- local({
+SFAB_ISRM_demo_data <- local({
 
   csv_data <-
     data_path(

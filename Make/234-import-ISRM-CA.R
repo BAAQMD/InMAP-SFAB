@@ -25,7 +25,7 @@ CA_ISRM_cell_geometries <- local({
 #'----------------------------------------------------------------------
 #'
 #' Filter `CA_ISRM_cell_geometries`,
-#' using `CMAQ_LCC_envelope`,
+#' using `SFAB_boundary`,
 #' yielding `CA_ISRM_SFAB_cell_geodata` (n = 2,553 cells).
 #'
 #'----------------------------------------------------------------------
