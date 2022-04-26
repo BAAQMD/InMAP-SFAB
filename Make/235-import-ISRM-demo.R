@@ -34,7 +34,9 @@ SFAB_ISRM_demo_data <- local({
 
   tidied_data <-
     csv_data %>%
-    tidy_InMAP_names()
+    tidy_InMAP_names() %>%
+    rename(
+      US_ISRM_id = isrm)
 
   unit_aware_data <-
     tidied_data %>%

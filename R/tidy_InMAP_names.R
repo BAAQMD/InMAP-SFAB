@@ -1,7 +1,6 @@
 tidy_InMAP_names <- function (
   input_data,
   codec = c(
-    "ISRM_id" = "isrm",
     "src_h1" = "Sector",
     "SCC_id" = "SCC",
     "PM25_TOT" = "TotalPM25",
@@ -22,8 +21,8 @@ tidy_InMAP_names <- function (
       input_data,
       !!!found_vars)
 
-  if (ISRM_ID_VAR %in% names(tidied_data)) {
-    tidied_data <- mutate(tidied_data, across(all_of(ISRM_ID_VAR), as.integer))
+  if (any(ISRM_ID_VARS %in% names(tidied_data))) {
+    tidied_data <- mutate(tidied_data, across(any_of(ISRM_ID_VARS), as.integer))
   }
 
   if ("SCC_id" %in% names(tidied_data)) {
@@ -35,7 +34,7 @@ tidy_InMAP_names <- function (
   tidied_data <-
     select(
       tidied_data,
-      any_of(ISRM_ID_VAR),
+      any_of(ISRM_ID_VARS),
       any_of(ISRM_EMS_VARS),
       any_of(ISRM_CONC_VARS),
       any_of(ISRM_POP_VARS),
