@@ -49,6 +49,6 @@ ISRM_US_LATLON_CSV_PATH <- here::here("Data", "UW", "2022-02-10", "isrm_boundari
 # via https://drive.google.com/drive/folders/1WmLRz7iWo2MjtSikgHEig7M0NvK2sOns
 ISRM_CA_CELL_COUNT <- 21705
 ISRM_CA_NC_URL <- "https://drive.google.com/u/0/uc?id=1v__TPKJeiL8Q4zLz8Dyx5HcWSqR2NDx4&export=download&confirm=t"
-ISRM_CA_NC_PATH <- here::here("Data", "GDrive", "ca_isrm.ncf")
+ISRM_CA_NC_PATH <- here::here("Data", "UW", "2022-04-25", "ca_isrm.ncf")
 
 
