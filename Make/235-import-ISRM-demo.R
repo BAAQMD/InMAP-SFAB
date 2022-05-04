@@ -21,9 +21,7 @@ ISRM_demo_data <- local({
     read_csv(
       verbose = TRUE) %>%
     select(
-      -any_of("...1")) %>%
-    select_first(
-      src_h1 = Sector)
+      -any_of("...1"))
 
   csv_cell_km2 <-
     csv_data %>%
@@ -126,7 +124,7 @@ SFAB_ISRM_demo_conc_data <-
   SFAB_ISRM_demo_conc_geodata %>%
   st_drop_geometry() %>%
   pivot_longer(
-    all_of(ISRM_CONC_VARS),
+    any_of(ISRM_CONC_VARS),
     names_to = "pol_abbr",
     values_to = "conc_qty") %>%
   mutate(
