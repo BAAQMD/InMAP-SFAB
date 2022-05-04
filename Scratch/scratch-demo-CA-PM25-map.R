@@ -1,15 +1,28 @@
-require_data(CA_ISRM_SFAB_cell_geodata)
-
 #'----------------------------------------------------------------------
 #'
 #' Map of total PM2.5, according to the CA ISRM.
 #'
 #'----------------------------------------------------------------------
 
+MAP_PM25_BREAKS <-
+  seq(0, 20, by = 5) %>%
+  set_names(
+    str_suffix(., " or more", length(.)))
+
+map_scale <- list(
+  theme(
+    legend.text.align = 0),
+  scale_fill_sepia(
+    limits = range(MAP_PM25_BREAKS),
+    breaks = MAP_PM25_BREAKS,
+    labels = names(MAP_PM25_BREAKS),
+    oob = scales::oob_squish))
+
 fig1_object <- local({
 
   map_geodata <-
-    CA_ISRM_SFAB_cell_geodata
+    require_data(
+      CA_ISRM_SFAB_cell_geodata)
 
   map_var <-
     "BaselineTotalPM25"
@@ -23,8 +36,7 @@ fig1_object <- local({
       color = "black") +
     scale_extent(
       st_extent(SFAB_boundary)) +
-    scale_fill_sepia(
-      limits = c(0, 20)) +
+    map_scale +
     theme(
       legend.position = "top") +
     annotate_scalebar() +
@@ -51,7 +63,8 @@ fig1_object <- local({
 fig2_object <- local({
 
   map_geodata <-
-    SFAB_ISRM_demo_conc_data %>%
+    require_data(
+      SFAB_ISRM_demo_conc_data) %>%
     sum_concentration_by(
       pol_abbr,
       any_of(ISRM_ID_VARS)) %>%
@@ -76,8 +89,7 @@ fig2_object <- local({
       data = drop_units(map_geodata)) +
     geom_SFAB_outline(
       color = "black") +
-    scale_fill_sepia(
-      limits = c(0, 20)) +
+    map_scale +
     scale_extent(
       st_extent(SFAB_boundary)) +
     theme(
