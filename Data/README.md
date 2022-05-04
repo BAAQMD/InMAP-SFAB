@@ -2,22 +2,26 @@
 
 This directory contains datasets used as input. For output, see [Build/].
 
+## Contents of `Data/BAAQMD/`
+
+The shapefile [CMAQ-LCC-1km-grid/BAAQMD_1km_toxic_164X224.zip][BAAQMD_1km_toxic_164X224.zip] contains an effective definition of the 1 km grid used by the Air District for CMAQ modeling.
+
+See also, in `Build/Geodata/`:
+
+- [CMAQ_LCC.prj], an SRS definition in PROJ format.
+- [CMAQ_LCC_1km_grid.geojson], a re-export of the same cell geometries found in the [BAAQMD_1km_toxic_164X224.zip] shapefile.
+- [CMAQ_raster_template.tif], a GeoTIFF version of the CMAQ cells.
+
 ## Contents of `Data/Zenodo/`
 
 `marginal_values/` is the unzipped contents of [marginal_values.zip][Zenodo], published alongside the full ISRM v1.2.1 on Zenodo. For details, see the [Zenodo] page.
 
 ## Contents of `Data/UW/`
 
-**`2022-02-10/`** contents were supplied by UW team to Phil Martien via email with link to Dropbox folder.
+See [Data/UW/README.md](../blob/master/Data/UW/README.md).
 
-**`2022-03-07/`** contents were supplied by UW team via Dropbox folder [Bay Area ISRM/].
-They were subsequently mirrored to this folder.
+## Large external files
 
-**`2022-04-25`** contents were shared by UW team via link to Google Drive [folder][ca_isrm2].
-
-For additional documentation, see `[References/Handoff/]`. 
-
-:warning: **Large external files.** 
 The following large files are _not_ in this GH repo, but are part of the build. 
 There's some code in `Make/` that attempts to download them, but it seems really hard to do programmatically, as there's a point where Google asks you to confirm and uses a one-time code in that process. 
 The code in `Make/` expects to find these files in a certain location; see `Make/*.R` for details.
@@ -32,6 +36,10 @@ These were mirrored from the internal BAAQMD/MTC Socrata portal on 2022-01-22.
 The shapefile contains hard-to-recognize Census variables like `P0020005`.
 The logic that translates and combines these into abbreviations of more familiar names for racial/ethnic categories, like `AsnPI` (Asian/Pacific Islander), is in the [exptools] R package.
 
+[BAAQMD_1km_toxic_164X224.zip]: ../blob/master/Data/BAAQMD/CMAQ-LCC-1km-grid/BAAQMD_1km_toxic_164X224.zip
+[CMAQ_LCC.prj]: ../blob/master/Build/Geodata/CMAQ_LCC.prj
+[CMAQ_raster_template.tif]: ../blob/master/Build/Geodata/CMAQ_raster_template.tif
+[CMAQ_LCC_1km_grid.geojson]: ../blob/master/Build/Geodata/CMAQ_LCC_1km_grid.geojson
 [Build/]: https://github.com/BAAQMD/ISRM-SFAB/blob/master/Build/
 [References/Handoff/]: https://github.com/BAAQMD/ISRM-SFAB/blob/master/References/Handoff
 [Zenodo]: https://zenodo.org/record/2589760#.YgREvS2ZPEa
