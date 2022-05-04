@@ -1,7 +1,3 @@
-require_data(US_ISRM_SFAB_cell_geometries)
-require_data(CA_ISRM_SFAB_cell_geometries)
-require_data(SFAB_tract_2020_geodata)
-
 #'----------------------------------------------------------------------
 #'
 #' Import demo dataset (NEI2014),
@@ -107,7 +103,7 @@ SFAB_ISRM_demo_conc_geodata <-
     any_of(ISRM_SRC_VARS),
     any_of(ISRM_CONC_VARS)) %>%
   powerjoin::power_right_join(
-    US_ISRM_SFAB_cell_geometries,
+    require_data(US_ISRM_SFAB_cell_geometries),
     .,
     by = "US_ISRM_id",
     check = powerjoin::check_specs(
@@ -144,11 +140,11 @@ comment(SFAB_ISRM_demo_conc_data) <-
 #'----------------------------------------------------------------------
 
 SFAB_ISRM_pop_2020_geodata <-
-  US_ISRM_SFAB_cell_geometries %>%
+  require_data(US_ISRM_SFAB_cell_geometries) %>%
   select(
     any_of(ISRM_ID_VARS)) %>%
   with_interpolated_population(
-    from = SFAB_tract_2020_geodata,
+    from = require_data(SFAB_tract_2020_geodata),
     id_vars = intersect(ISRM_ID_VARS, names(.)),
     na = 0,
     verbose = TRUE)
