@@ -39,12 +39,12 @@ The code in `Make/` expects to find these files in a certain location; see `Make
 - [Big ISRM][Zenodo]
 - [CA ISRM][ca_isrm1]
 
-[BAAQMD_1km_toxic_164X224.zip]: ../blob/master/Data/BAAQMD/CMAQ-LCC-1km-grid/BAAQMD_1km_toxic_164X224.zip
-[CMAQ_LCC.prj]: ../blob/master/Build/Geodata/CMAQ_LCC.prj
-[CMAQ_raster_template.tif]: ../blob/master/Build/Geodata/CMAQ_raster_template.tif
-[CMAQ_LCC_1km_grid.geojson]: ../blob/master/Build/Geodata/CMAQ_LCC_1km_grid.geojson
-[Build/]: ../blob/master/Build/
-[Make/]: ../blob/master/Make/
+[BAAQMD_1km_toxic_164X224.zip]: ./BAAQMD/CMAQ-LCC-1km-grid/BAAQMD_1km_toxic_164X224.zip
+[CMAQ_LCC.prj]: ../Build/Geodata/CMAQ_LCC.prj
+[CMAQ_raster_template.tif]: ../Build/Geodata/CMAQ_raster_template.tif
+[CMAQ_LCC_1km_grid.geojson]: ../Build/Geodata/CMAQ_LCC_1km_grid.geojson
+[Build/]: ../Build/
+[Make/]: ../Make/
 [References/Handoff/]: https://github.com/BAAQMD/ISRM-SFAB/blob/master/References/Handoff
 [Zenodo]: https://zenodo.org/record/2589760#.YgREvS2ZPEa
 [ca_isrm1]: https://drive.google.com/drive/folders/1WmLRz7iWo2MjtSikgHEig7M0NvK2sOns?usp=sharing
