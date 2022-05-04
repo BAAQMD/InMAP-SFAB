@@ -13,7 +13,7 @@ tidy_InMAP_names <- function (
   found_vars <-
     tidyselect::vars_select(
       names(input_data),
-      all_of(codec),
+      any_of(codec),
       .strict = FALSE)
 
   tidied_data <-

@@ -1,7 +1,3 @@
-require_data(US_ISRM_SFAB_cell_geometries)
-require_data(CA_ISRM_SFAB_cell_geometries)
-require_data(SFAB_tract_2020_geodata)
-
 #'----------------------------------------------------------------------
 #'
 #' Import demo dataset (NEI2014),
@@ -12,18 +8,16 @@ ISRM_demo_data <- local({
 
   csv_path <- data_path(
     "UW",
-    "2022-03-07",
+    "2022-05-04",
     "ISRM",
-    "bay_inmap_result.csv")
+    "bay_results_aggregate_isrm.csv")
 
   csv_data <-
     csv_path %>%
     read_csv(
       verbose = TRUE) %>%
     select(
-      -any_of("...1")) %>%
-    select_first(
-      src_h1 = Sector)
+      -any_of("...1"))
 
   csv_cell_km2 <-
     csv_data %>%
@@ -109,7 +103,7 @@ SFAB_ISRM_demo_conc_geodata <-
     any_of(ISRM_SRC_VARS),
     any_of(ISRM_CONC_VARS)) %>%
   powerjoin::power_right_join(
-    US_ISRM_SFAB_cell_geometries,
+    require_data(US_ISRM_SFAB_cell_geometries),
     .,
     by = "US_ISRM_id",
     check = powerjoin::check_specs(
@@ -126,7 +120,7 @@ SFAB_ISRM_demo_conc_data <-
   SFAB_ISRM_demo_conc_geodata %>%
   st_drop_geometry() %>%
   pivot_longer(
-    all_of(ISRM_CONC_VARS),
+    any_of(ISRM_CONC_VARS),
     names_to = "pol_abbr",
     values_to = "conc_qty") %>%
   mutate(
@@ -146,11 +140,11 @@ comment(SFAB_ISRM_demo_conc_data) <-
 #'----------------------------------------------------------------------
 
 SFAB_ISRM_pop_2020_geodata <-
-  US_ISRM_SFAB_cell_geometries %>%
+  require_data(US_ISRM_SFAB_cell_geometries) %>%
   select(
     any_of(ISRM_ID_VARS)) %>%
   with_interpolated_population(
-    from = SFAB_tract_2020_geodata,
+    from = require_data(SFAB_tract_2020_geodata),
     id_vars = intersect(ISRM_ID_VARS, names(.)),
     na = 0,
     verbose = TRUE)

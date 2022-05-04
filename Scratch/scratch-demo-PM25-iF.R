@@ -1,10 +1,5 @@
 source(here::here("Make", "100-setup.R"))
 
-require_data(SFAB_tract_2020_raceeth_data)
-require_data(SFAB_ISRM_demo_ems_data)
-require_data(SFAB_ISRM_demo_conc_data)
-require_data(SFAB_ISRM_pop_2020_data)
-require_data(US_ISRM_SFAB_cell_geometries)
 require_data(ISRM_ID_VARS)
 
 #'
@@ -33,11 +28,15 @@ breathing_rate <-
   set_units(14.5, "m^3/d/person")
 
 NGC_pop_qty <-
-  pull_total(SFAB_tract_2020_raceeth_data, pop_qty) %>%
-  set_units("Mperson")
+  require_data(
+    SFAB_tract_2020_raceeth_data) %>%
+  pull_total(
+    pop_qty) %>%
+  set_units(
+    "Mperson")
 
 NGC_PM25_iF <-
-  intake_fraction(
+  intake_fraction( # see R/intake_fraction.R
     pop_qty = NGC_pop_qty,
     conc_qty = NGC_PM5_PRI_conc_qty,
     ems_qty = NGC_PM25_ems_qty,
@@ -46,20 +45,22 @@ NGC_PM25_iF <-
 testthat::expect_equal(
   NGC_PM25_iF, set_units(15.7, "ppm"), tol = 1e-2)
 
-#' For comparison, in this demo, the numbers for `PM25_PRI` are:
+#'
+#' For comparison, in this demo, the numbers for `PrimaryPM25` are:
 #'
 #' - Emissions: 11,289 ton/yr
-#' - Exposure:   1.546 ug/m3
+#' - Exposure:   3.234 ug/m3
 #'
 #' Assuming a constant breathing rate of 14.5 m3 d-1, the former works out to
-#' an intake fraction (iF) of 2.07 ppt, and the latter to 0.446 ppt.
+#' an intake fraction (iF) of 15.69 ppm, and the latter to 12.76 ppm.
 #'
 demo_PM25_ems_qty <-
-  SFAB_ISRM_demo_ems_data %>%
+  require_data(
+    SFAB_ISRM_demo_ems_data) %>%
   filter(
     pol_abbr == "PM25") %>%
   semi_join(
-    US_ISRM_SFAB_cell_geometries,
+    require_data(US_ISRM_SFAB_cell_geometries),
     by = intersect(names(.), ISRM_ID_VARS)) %>%
   mutate(
     ems_qty = set_units(ems_qty, unique(ems_unit), mode = "character")) %>%
@@ -78,7 +79,8 @@ demo_PM25_ems_qty <-
     "t/d")
 
 demo_PrimaryPM25_conc_qty <-
-  SFAB_ISRM_pop_2020_data %>%
+  require_data(
+    SFAB_ISRM_pop_2020_data) %>%
   summarise_exposure_to(
     filter(
       SFAB_ISRM_demo_conc_data,
@@ -87,11 +89,17 @@ demo_PrimaryPM25_conc_qty <-
   pull(`exp/pop`)
 
 testthat::expect_equal(
-  demo_PrimaryPM25_conc_qty, 1.546, tol = 1e-3)
+  demo_PrimaryPM25_conc_qty,
+  3.234,
+  tol = 1e-3)
 
 demo_pop_qty <-
-  pull_total(SFAB_ISRM_pop_2020_data, pop_qty) %>%
-  set_units("Mperson")
+  require_data(
+    SFAB_ISRM_pop_2020_data) %>%
+  pull_total(
+    pop_qty) %>%
+  set_units(
+    "Mperson")
 
 testthat::expect_equal(
   demo_pop_qty,
@@ -106,10 +114,12 @@ demo_PM25_iF <-
     breathing_rate = breathing_rate)
 
 testthat::expect_equal(
-  demo_PM25_iF, set_units(6.10, "ppm"), tol = 1e-2)
+  demo_PM25_iF,
+  set_units(12.76, "ppm"),
+  tol = 1e-3)
 
 #'
-#' That's a ratio of about 5:2.
+#' That's a ratio of about 1.2x.
 #'
 show(NGC_PM25_iF / demo_PM25_iF)
 
