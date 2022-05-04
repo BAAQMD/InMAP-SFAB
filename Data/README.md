@@ -18,7 +18,7 @@ See [Data/UW/README.md](../blob/master/Data/UW/README.md).
 
 ## Contents of `Data/Zenodo/`
 
-`marginal_values/` is the unzipped contents of [marginal_values.zip][Zenodo], published alongside the full ISRM v1.2.1 on Zenodo. For details, see the [Zenodo] page.
+`marginal_values/` is the unzipped contents of [marginal_values.zip][Zenodo], published alongside the US ISRM v1.2.1 on Zenodo. For details, see the [Zenodo] page.
 
 ## Contents of `Data/Socrata/`
 
