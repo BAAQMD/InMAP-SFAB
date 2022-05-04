@@ -10,7 +10,7 @@ ISRM_demo_data <- local({
     "UW",
     "2022-05-04",
     "ISRM",
-    "bay_results_aggregate_isrm.csv")
+    "bay_results_sector_isrm.csv")
 
   csv_data <-
     csv_path %>%
@@ -72,6 +72,10 @@ ISRM_demo_data <- local({
     unit_aware_data
 
 })
+
+testthat::expect_equal(
+  nrow(ISRM_demo_data),
+  29456)
 
 #'----------------------------------------------------------------------
 #'
