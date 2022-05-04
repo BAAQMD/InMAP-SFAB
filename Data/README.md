@@ -12,13 +12,13 @@ See also, in `Build/Geodata/`:
 - [CMAQ_LCC_1km_grid.geojson], a re-export of the same cell geometries found in the [BAAQMD_1km_toxic_164X224.zip] shapefile.
 - [CMAQ_raster_template.tif], a GeoTIFF version of the CMAQ cells.
 
-## Contents of `Data/Zenodo/`
-
-`marginal_values/` is the unzipped contents of [marginal_values.zip][Zenodo], published alongside the full ISRM v1.2.1 on Zenodo. For details, see the [Zenodo] page.
-
 ## Contents of `Data/UW/`
 
 See [Data/UW/README.md](../blob/master/Data/UW/README.md).
+
+## Contents of `Data/Zenodo/`
+
+`marginal_values/` is the unzipped contents of [marginal_values.zip][Zenodo], published alongside the full ISRM v1.2.1 on Zenodo. For details, see the [Zenodo] page.
 
 ## Large external files
 
