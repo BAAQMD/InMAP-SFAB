@@ -1,6 +1,6 @@
 # InMAP-SFAB
 
-[InMAP](https://inmap.run) analyses scoped to the San Francisco air basin ("SFAB").
+- :tada: Scope: [InMAP](https://inmap.run) analyses scoped to the San Francisco air basin ("SFAB").
 
 ## Project / Task Management
 
