@@ -12,9 +12,9 @@ ISRM_demo_data <- local({
 
   csv_path <- data_path(
     "UW",
-    "2022-03-07",
+    "2022-05-04",
     "ISRM",
-    "bay_inmap_result.csv")
+    "bay_results_aggregate_isrm.csv")
 
   csv_data <-
     csv_path %>%
