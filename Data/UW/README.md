@@ -1,8 +1,6 @@
 # README for Data/UW/
 
-This is a placeholder for information about stuff in Data/UW/.
-
-* Feel free to [edit] it directly in GitHub!
+* Feel free to [edit] this directly in GitHub!
 * Use [Markdown syntax][md-syntax]; it's a great habit to learn.
 * For tables, use [Markdown Tables Generator][md-tables], then paste here.
 
