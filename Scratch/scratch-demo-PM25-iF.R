@@ -45,13 +45,14 @@ NGC_PM25_iF <-
 testthat::expect_equal(
   NGC_PM25_iF, set_units(15.7, "ppm"), tol = 1e-2)
 
-#' For comparison, in this demo, the numbers for `PM25_PRI` are:
+#'
+#' For comparison, in this demo, the numbers for `PrimaryPM25` are:
 #'
 #' - Emissions: 11,289 ton/yr
-#' - Exposure:   1.546 ug/m3
+#' - Exposure:   3.234 ug/m3
 #'
 #' Assuming a constant breathing rate of 14.5 m3 d-1, the former works out to
-#' an intake fraction (iF) of 2.07 ppt, and the latter to 0.446 ppt.
+#' an intake fraction (iF) of 15.69 ppm, and the latter to 12.76 ppm.
 #'
 demo_PM25_ems_qty <-
   require_data(
@@ -88,7 +89,9 @@ demo_PrimaryPM25_conc_qty <-
   pull(`exp/pop`)
 
 testthat::expect_equal(
-  demo_PrimaryPM25_conc_qty, 1.546, tol = 1e-3)
+  demo_PrimaryPM25_conc_qty,
+  3.234,
+  tol = 1e-3)
 
 demo_pop_qty <-
   require_data(
@@ -111,10 +114,12 @@ demo_PM25_iF <-
     breathing_rate = breathing_rate)
 
 testthat::expect_equal(
-  demo_PM25_iF, set_units(6.10, "ppm"), tol = 1e-2)
+  demo_PM25_iF,
+  set_units(12.76, "ppm"),
+  tol = 1e-3)
 
 #'
-#' That's a ratio of about 5:2.
+#' That's a ratio of about 1.2x.
 #'
 show(NGC_PM25_iF / demo_PM25_iF)
 
