@@ -35,7 +35,9 @@ msg("filtering `CA_ISRM_cell_geometries` using `SFAB_boundary`")
 CA_ISRM_SFAB_cell_geometries <-
   CA_ISRM_cell_geometries %>%
   st_filter(
-    st_transform(SFAB_boundary, st_crs(.))) %>%
+    st_transform(
+      require_data(SFAB_boundary),
+      st_crs(.))) %>%
   ensurer::ensure(
     nrow(.) == 3541)
 
@@ -163,9 +165,14 @@ CA_ISRM_SFAB_cell_geodata <-
 #'----------------------------------------------------------------------
 
 write_data(CA_ISRM_cell_geometries)
+write_data(CA_ISRM_SFAB_cell_geometries)
 write_data(CA_ISRM_cell_geodata)
 write_data(CA_ISRM_SFAB_cell_geodata)
 
 write_geojson(
   CA_ISRM_cell_geometries,
+  build_path("Geodata", "CA_ISRM_cell_geometries.geojson"))
+
+write_geojson(
+  CA_ISRM_SFAB_cell_geometries,
   build_path("Geodata", "CA_ISRM_SFAB_cell_geometries.geojson"))
