@@ -20,6 +20,13 @@ See [Data/UW/README.md](../blob/master/Data/UW/README.md).
 
 `marginal_values/` is the unzipped contents of [marginal_values.zip][Zenodo], published alongside the full ISRM v1.2.1 on Zenodo. For details, see the [Zenodo] page.
 
+## Contents of `Data/Socrata/`
+
+Here you'll find copies of Census 2020 counts, by race/ethnicity, for the SF Bay Area.
+These were mirrored from the internal BAAQMD/MTC Socrata portal on 2022-01-22.
+The shapefile contains hard-to-recognize Census variables like `P0020005`.
+The logic that translates and combines these into abbreviations of more familiar names for racial/ethnic categories, like `AsnPI` (Asian/Pacific Islander), is in the [exptools] R package.
+
 ## Large external files
 
 The following large files are _not_ in this GH repo, but are part of the build. 
@@ -28,13 +35,6 @@ The code in `Make/` expects to find these files in a certain location; see `Make
 
 - [Big ISRM][Zenodo]
 - [CA ISRM][ca_isrm1]
-
-## Contents of `Data/Socrata/`
-
-Here you'll find copies of Census 2020 counts, by race/ethnicity, for the SF Bay Area.
-These were mirrored from the internal BAAQMD/MTC Socrata portal on 2022-01-22.
-The shapefile contains hard-to-recognize Census variables like `P0020005`.
-The logic that translates and combines these into abbreviations of more familiar names for racial/ethnic categories, like `AsnPI` (Asian/Pacific Islander), is in the [exptools] R package.
 
 [BAAQMD_1km_toxic_164X224.zip]: ../blob/master/Data/BAAQMD/CMAQ-LCC-1km-grid/BAAQMD_1km_toxic_164X224.zip
 [CMAQ_LCC.prj]: ../blob/master/Build/Geodata/CMAQ_LCC.prj
