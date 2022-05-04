@@ -8,19 +8,19 @@
 
 ### 2022-05-04
 
-- Mirrored `ISRM/` subfolder of Dropbox folder [Bay Area ISRM/] to `Data/UW/2022-05-04/ISRM/`, per [comment in GitHub](https://github.com/BAAQMD/InMAP-SFAB/issues/1#issuecomment-1116280506).
+- @dholstius mirrored `ISRM/` subfolder of Dropbox folder [Bay Area ISRM/] to `Data/UW/2022-05-04/ISRM/`, per [comment in GitHub](https://github.com/BAAQMD/InMAP-SFAB/issues/1#issuecomment-1116280506).
 
 ### 2022-02-10
 
-- Mirrored `Data/UW/2022-02-10/` contents, supplied by UW team to Phil Martien via email with link to Dropbox folder [Bay Area ISRM/].
+- @dholstius mirrored `Data/UW/2022-02-10/` contents, supplied by UW team to Phil Martien via email with link to Dropbox folder [Bay Area ISRM/].
 
 ### 2022-03-07
 
-- Mirrored `Data/UW/2022-03-07/` contents, supplied by UW team via Dropbox folder [Bay Area ISRM/].
+- @dholstius mirrored `Data/UW/2022-03-07/` contents, supplied by UW team via Dropbox folder [Bay Area ISRM/].
 
 ### 2022-04-25
 
-- Mirrored `Data/UW/2022-04-25/` contents, shared by UW team via link to Google Drive [folder][ca_isrm2].
+- @dholstius mirrored `Data/UW/2022-04-25/` contents, shared by UW team via link to Google Drive [folder][ca_isrm2].
 
 ## Notes
 
