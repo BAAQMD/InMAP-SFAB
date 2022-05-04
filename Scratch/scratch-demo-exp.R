@@ -1,12 +1,6 @@
 require_data(SFAB_ISRM_demo_conc_data)
 require_data(SFAB_ISRM_pop_2020_data)
 
-#'----------------------------------------------------------------------
-#'
-#' Quick map of `TotalPM25`.
-#'
-#'----------------------------------------------------------------------
-
 mapview_ISRM_concentrations <- function (
   ISRM_data,
   pollutant,
@@ -65,7 +59,7 @@ mapview_ISRM_concentrations <- function (
   map_object <-
     mapview::mapview(
       map_geodata,
-      label = labels,
+      label = cell_labels,
       layer.name = str_glue("{pollutant} ({unit})"),
       popup = popup_html,
       zcol = zcol)
@@ -73,6 +67,11 @@ mapview_ISRM_concentrations <- function (
   return(map_object)
 
 }
+#'----------------------------------------------------------------------
+#'
+#' Quick map of `TotalPM25`.
+#'
+#'----------------------------------------------------------------------
 
 demo_map_PrimaryPM25 <-
   SFAB_ISRM_demo_conc_data %>%

@@ -1,4 +1,5 @@
 require_data(SFAB_ISRM_demo_ems_data)
+require_data(US_ISRM_SFAB_cell_geometries)
 
 #'----------------------------------------------------------------------
 #'
@@ -16,7 +17,7 @@ SFAB_ISRM_demo_ems_data %>%
     US_ISRM_id, pol_abbr) %>%
   inner_join(
     US_ISRM_SFAB_cell_geometries, .,
-    by = any_of(ISRM_ID_VARS)) %>%
+    by = "US_ISRM_id") %>%
   mutate(
     ems_km2 = ems_qty / st_km2(.)) %>%
   mapview::mapview(
