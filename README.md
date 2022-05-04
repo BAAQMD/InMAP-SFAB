@@ -9,14 +9,18 @@
 
 ## Notable Files and Folders
 
-As of 2022-04-25:
+As of 2022-05-04:
 
-- A series of R scripts to "make" intermediate datasets is in [Make/]. These write to subdirectories of [Build/]. 
-- R utility functions, written by @dholstius, are in [R/]. These are employed by scripts in [Make/].
+- A series of R scripts to "make" intermediate datasets is in [Make/]. 
+    - The scripts are numbered `100-setup.R`, `200-import.R`, etc., and may source sub-scripts.
+    - They write to subdirectories of [Build/]. For example:
+        - GIS definitions are exported to [Build/Geodata/].
+        - Scratch work related to the "demo" handoff is exported to [Build/Demo/].
+    - They take input from subdirectories of [Data/], which has its own [README](./Data/README.md). 
+    - They make use of utility functions found in [R/].
 - Scripts in [Scratch/] look for stuff in [Build/], and summarize it in human-friendly ways.
-- GIS definitions are exported to [Build/Geodata/].
 - "Demo" inputs (from the UW team) and outputs are in [Data/UW/] and [Build/Demo/], respectively.
-- Hardened scratch-work will most likely be promoted to `Analyses/` or `Report/`.
+- Hardened scratch-work will most likely be promoted at a later date to `Analyses/` or `Report/`.
 
 ```mermaid
   graph TD;
