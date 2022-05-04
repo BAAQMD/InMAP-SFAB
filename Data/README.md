@@ -47,4 +47,3 @@ The logic that translates and combines these into abbreviations of more familiar
 [ca_isrm2]: https://drive.google.com/drive/folders/1jO5saBcQW1-qmiv-pjsICNiulud9SCU5
 [Bay Area ISRM/]: https://www.dropbox.com/sh/0bwdu3vnfsmrrzg/AAA87bGHmcv5Fr3GOTWXczZva?dl=0
 [exptools]: https://github.com/BAAQMD/exptools
-[marginal_values.zip]
