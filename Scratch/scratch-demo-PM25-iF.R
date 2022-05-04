@@ -1,10 +1,5 @@
 source(here::here("Make", "100-setup.R"))
 
-require_data(SFAB_tract_2020_raceeth_data)
-require_data(SFAB_ISRM_demo_ems_data)
-require_data(SFAB_ISRM_demo_conc_data)
-require_data(SFAB_ISRM_pop_2020_data)
-require_data(US_ISRM_SFAB_cell_geometries)
 require_data(ISRM_ID_VARS)
 
 #'
@@ -33,11 +28,15 @@ breathing_rate <-
   set_units(14.5, "m^3/d/person")
 
 NGC_pop_qty <-
-  pull_total(SFAB_tract_2020_raceeth_data, pop_qty) %>%
-  set_units("Mperson")
+  require_data(
+    SFAB_tract_2020_raceeth_data) %>%
+  pull_total(
+    pop_qty) %>%
+  set_units(
+    "Mperson")
 
 NGC_PM25_iF <-
-  intake_fraction(
+  intake_fraction( # see R/intake_fraction.R
     pop_qty = NGC_pop_qty,
     conc_qty = NGC_PM5_PRI_conc_qty,
     ems_qty = NGC_PM25_ems_qty,
@@ -55,11 +54,12 @@ testthat::expect_equal(
 #' an intake fraction (iF) of 2.07 ppt, and the latter to 0.446 ppt.
 #'
 demo_PM25_ems_qty <-
-  SFAB_ISRM_demo_ems_data %>%
+  require_data(
+    SFAB_ISRM_demo_ems_data) %>%
   filter(
     pol_abbr == "PM25") %>%
   semi_join(
-    US_ISRM_SFAB_cell_geometries,
+    require_data(US_ISRM_SFAB_cell_geometries),
     by = intersect(names(.), ISRM_ID_VARS)) %>%
   mutate(
     ems_qty = set_units(ems_qty, unique(ems_unit), mode = "character")) %>%
@@ -78,7 +78,8 @@ demo_PM25_ems_qty <-
     "t/d")
 
 demo_PrimaryPM25_conc_qty <-
-  SFAB_ISRM_pop_2020_data %>%
+  require_data(
+    SFAB_ISRM_pop_2020_data) %>%
   summarise_exposure_to(
     filter(
       SFAB_ISRM_demo_conc_data,
@@ -90,8 +91,12 @@ testthat::expect_equal(
   demo_PrimaryPM25_conc_qty, 1.546, tol = 1e-3)
 
 demo_pop_qty <-
-  pull_total(SFAB_ISRM_pop_2020_data, pop_qty) %>%
-  set_units("Mperson")
+  require_data(
+    SFAB_ISRM_pop_2020_data) %>%
+  pull_total(
+    pop_qty) %>%
+  set_units(
+    "Mperson")
 
 testthat::expect_equal(
   demo_pop_qty,
