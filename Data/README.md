@@ -1,6 +1,9 @@
 # README for Data/
 
-This directory contains datasets used as input. For output, see [Build/].
+:warning: This directory contains datasets used as _input_ in the "make" process. 
+
+- For scripts that use these as input, see [Make/].
+- For output, see [Build/].
 
 ## Contents of `Data/BAAQMD/`
 
@@ -40,7 +43,8 @@ The code in `Make/` expects to find these files in a certain location; see `Make
 [CMAQ_LCC.prj]: ../blob/master/Build/Geodata/CMAQ_LCC.prj
 [CMAQ_raster_template.tif]: ../blob/master/Build/Geodata/CMAQ_raster_template.tif
 [CMAQ_LCC_1km_grid.geojson]: ../blob/master/Build/Geodata/CMAQ_LCC_1km_grid.geojson
-[Build/]: https://github.com/BAAQMD/ISRM-SFAB/blob/master/Build/
+[Build/]: ../blob/master/Build/
+[Make/]: ../blob/master/Make/
 [References/Handoff/]: https://github.com/BAAQMD/ISRM-SFAB/blob/master/References/Handoff
 [Zenodo]: https://zenodo.org/record/2589760#.YgREvS2ZPEa
 [ca_isrm1]: https://drive.google.com/drive/folders/1WmLRz7iWo2MjtSikgHEig7M0NvK2sOns?usp=sharing
