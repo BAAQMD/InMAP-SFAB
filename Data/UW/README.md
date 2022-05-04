@@ -24,17 +24,16 @@
 
 ## Notes
 
-For additional documentation, see `[References/Handoff/]`. 
+For additional documentation, see [References/Handoff/]. 
 
 [edit]: https://docs.github.com/en/repositories/working-with-files/managing-files/editing-files
 [md-syntax]: https://www.markdownguide.org/basic-syntax/
 [md-tables]: https://www.tablesgenerator.com/markdown_tables
 
 [Build/]: https://github.com/BAAQMD/ISRM-SFAB/blob/master/Build/
-[References/Handoff/]: https://github.com/BAAQMD/ISRM-SFAB/blob/master/References/Handoff
+[References/Handoff/]: https://github.com/BAAQMD/ISRM-SFAB/blob/master/References/Handoff/
 [Zenodo]: https://zenodo.org/record/2589760#.YgREvS2ZPEa
 [ca_isrm1]: https://drive.google.com/drive/folders/1WmLRz7iWo2MjtSikgHEig7M0NvK2sOns?usp=sharing
 [ca_isrm2]: https://drive.google.com/drive/folders/1jO5saBcQW1-qmiv-pjsICNiulud9SCU5
 [Bay Area ISRM/]: https://www.dropbox.com/sh/0bwdu3vnfsmrrzg/AAA87bGHmcv5Fr3GOTWXczZva?dl=0
 [exptools]: https://github.com/BAAQMD/exptools
-[marginal_values.zip]
