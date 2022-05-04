@@ -17,7 +17,7 @@ See also, in `Build/Geodata/`:
 
 ## Contents of `Data/UW/`
 
-See [Data/UW/README.md](../blob/master/Data/UW/README.md).
+See [Data/UW/README.md](./UW/README.md).
 
 ## Contents of `Data/Zenodo/`
 
