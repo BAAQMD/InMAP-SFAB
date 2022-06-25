@@ -1,6 +1,3 @@
-require_data(SFAB_ISRM_demo_conc_data)
-require_data(SFAB_ISRM_pop_2020_data)
-
 mapview_ISRM_concentrations <- function (
   ISRM_data,
   pollutant,
@@ -13,20 +10,24 @@ mapview_ISRM_concentrations <- function (
     unit <- unit_for_concentration(pollutant, format = "character")
   }
 
+  ISRM_id_var <-
+    intersect(ISRM_ID_VARS, names(ISRM_data)) %>%
+    ensurer::ensure(length(.) == 1)
+
   map_geodata <-
     ISRM_data %>%
     filter(
       pol_abbr == pollutant) %>%
     drop_units() %>%
     sum_concentration_by(
-      any_of(ISRM_ID_VARS)) %>%
+      all_of(ISRM_id_var)) %>%
     left_join(
       require_data(US_ISRM_SFAB_cell_geometries),
       .,
-      by = any_of(ISRM_ID_VARS))
+      by = ISRM_id_var)
 
   cell_ids <-
-    unlist(select(map_geodata, any_of(ISRM_ID_VARS)))
+    map_geodata[[ISRM_id_var]]
 
   cell_values <-
     map_geodata[[zcol]]
@@ -52,7 +53,7 @@ mapview_ISRM_concentrations <- function (
     left_join(
       map_geodata,
       .,
-      by = any_of(ISRM_ID_VARS)) %>%
+      by = ISRM_id_var) %>%
     pull(
       popup_html)
 
@@ -67,14 +68,16 @@ mapview_ISRM_concentrations <- function (
   return(map_object)
 
 }
+
 #'----------------------------------------------------------------------
 #'
-#' Quick map of `TotalPM25`.
+#' Quick map of `PrimaryPM25`.
 #'
 #'----------------------------------------------------------------------
 
 demo_map_PrimaryPM25 <-
-  SFAB_ISRM_demo_conc_data %>%
+  require_data(
+    SFAB_ISRM_demo_conc_data) %>%
   mapview_ISRM_concentrations(
     pollutant = "PrimaryPM25")
 
